@@ -1,0 +1,17 @@
+import express from "express";
+import cors from "cors";
+import characterRoute from "./routes/character.routes.js";
+
+const expressServer = express();
+
+expressServer.use(cors());
+
+expressServer.use(express.static("uploads"));
+
+expressServer.use(express.json());
+
+expressServer.use(characterRoute);
+
+expressServer.listen(3042, () => {
+  console.log("Serveren kører på http://localhost:3042");
+});
