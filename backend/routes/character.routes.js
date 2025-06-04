@@ -1,10 +1,11 @@
 import express from "express";
 import { getCharacter } from "../handlers/character.handler.js";
+import Character from "../models/character.model.js";
 
 const characterRoute = express.Router();
 
 // get all characters
-characterRoute.get("/character", async (req, res) => {
+characterRoute.get("/characters", async (req, res) => {
   try {
     const result = await getCharacter();
     return res.status(200).send({
@@ -19,6 +20,27 @@ characterRoute.get("/character", async (req, res) => {
       message: "Server-fejl",
       error: error.message,
     });
+  }
+});
+
+// add a new character
+characterRoute.post("/character", async (req, res) => {
+  try {
+    var character = new Character(req.body);
+    await character.save();
+    res.status(201).send(character);
+  } catch (error) {
+    console.error("Server-fejl", error);
+    if (error.errors) {
+      let errors = {};
+
+      Object.keys(error.errors).forEach((key) => {
+        errors[key] = error.errors[key].message;
+      });
+
+      return res.status(400).send(errors);
+    }
+    res.status(500).send("sonething went wrong");
   }
 });
 

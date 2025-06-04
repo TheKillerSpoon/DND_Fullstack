@@ -1,4 +1,5 @@
-import dbConnect from "../dbConnect.js";
+import { dbConnect } from "../dbConnect.js";
+import characterModel from "../models/character.model.js";
 
 // Get all characters
 export const getCharacter = async () => {
@@ -10,3 +11,4 @@ export const getCharacter = async () => {
     throw new Error("Der skete en fejl:");
   }
 };
+9;

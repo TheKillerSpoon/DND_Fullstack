@@ -1,5 +1,10 @@
 import express from "express";
 import cors from "cors";
+
+import { dbConnect } from "./dbConnect.js";
+
+await dbConnect(); // Opretter forbindelse til databasen
+
 import characterRoute from "./routes/character.routes.js";
 
 const expressServer = express();
