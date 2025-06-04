@@ -13,7 +13,8 @@ const stats = [
   "charisma",
 ];
 
-const Dice = ["d4", "d6", "d8", "d10", "d12", "d20"];
+// Defining the possible hit dice for characters
+const hitDice = [4, 6, 8, 10, 12, 20];
 
 // Function to create a stats object with validation rules
 const statsTypes = () => {
@@ -27,6 +28,21 @@ const statsTypes = () => {
     };
   });
   return statsObject;
+};
+
+// Function to create traits, ideals, bonds, and flaws
+const TIBF = ["personalityTraits", "ideals", "bonds", "flaws"];
+const traitsIdealsBondsFlaws = () => {
+  let TIBFObject = {};
+  TIBF.forEach((_TIBF) => {
+    TIBFObject[_TIBF] = {
+      type: String,
+      maxlength: 500,
+      minlength: 0,
+      default: "",
+    };
+  });
+  return TIBFObject;
 };
 
 const characterSchema = new Schema(
@@ -202,7 +218,7 @@ const characterSchema = new Schema(
     dice: {
       type: Number,
       default: 4,
-      enum: Dice,
+      enum: hitDice,
     },
     //* death saves -------------------------------------------------------------------------
     deathSaves: {
@@ -220,19 +236,28 @@ const characterSchema = new Schema(
         },
         attackBonus: { type: Number, default: 0, min: -20, max: 20 },
         damage: {
-          type: Object,
-          required: true,
-          hitAmount: { type: Number, default: 1, min: 1, required: true },
+          hits: { type: Number, default: 1, min: 1, required: true },
           hitDice: {
-            type: String,
-            enum: Dice,
-            default: "d4",
+            type: Number,
+            enum: hitDice,
             required: true,
           },
         },
         damageType: { type: Number, min: 1, max: 50 },
       },
     ],
+    //* equipment ---------------------------------------------------------------------------
+    equipment: {
+      type: [String],
+      default: [],
+    },
+    //* personal traits, ideals, bonds, and flaws -------------------------------------------
+    ...traitsIdealsBondsFlaws(),
+    //* features and traits -----------------------------------------------------------------
+    featuresTraits: {
+      type: [String],
+      default: [],
+    },
   },
   { timestamps: true, strict: true }
 );
@@ -245,12 +270,14 @@ character.deleteMany({}).then(() => {
     class: "barbarian",
     strength: 15,
 
+    saves: ["strength", "constitution"],
+
     attack: {
       attackName: "Test Attack",
       attackBonus: 5,
       damage: {
-        hitAmount: 1,
-        hitDice: "d6",
+        hits: 1,
+        hitDice: 4,
       },
       damageType: 1,
     },
