@@ -220,13 +220,15 @@ const characterSchema = new Schema(
         },
         attackBonus: { type: Number, default: 0, min: -20, max: 20 },
         damage: {
-          hitAmount: { type: Number, default: 1, min: 1 },
+          type: Object,
+          required: true,
+          hitAmount: { type: Number, default: 1, min: 1, required: true },
           hitDice: {
             type: String,
             enum: Dice,
             default: "d4",
+            required: true,
           },
-          required: true,
         },
         damageType: { type: Number, min: 1, max: 50 },
       },
@@ -247,6 +249,7 @@ character.deleteMany({}).then(() => {
       attackName: "Test Attack",
       attackBonus: 5,
       damage: {
+        hitAmount: 1,
         hitDice: "d6",
       },
       damageType: 1,
