@@ -45,21 +45,6 @@ const traitsIdealsBondsFlaws = () => {
   return TIBFObject;
 };
 
-// health related fields
-const healthFields = ["maxHealth", "currentHealth", "temporaryHealth"];
-const health = () => {
-  let healthObject = {};
-  healthFields.forEach((health) => {
-    healthObject[health] = {
-      type: Number,
-      default: 0,
-      min: [0, `${health} can't be below 0`],
-      max: [999, `${health} can't be above 999`],
-    };
-  });
-  return healthObject;
-};
-
 const characterSchema = new Schema(
   {
     //* Character name ----------------------------------------------------------------------
@@ -227,6 +212,7 @@ const characterSchema = new Schema(
     otherProficiencies: {
       type: [String],
       default: [],
+      minlength: [1, "Proficiencies/Languages can't be empty"],
       maxlength: [
         100,
         "Proficiencies/Languages can't be longer than 100 characters",
@@ -282,13 +268,13 @@ const characterSchema = new Schema(
     },
     //* death saves -------------------------------------------------------------------------
     deathSaves: {
-      deathSaveSuccesses: {
+      successes: {
         type: Number,
         default: 0,
         min: [0, "successes can't be below 0"],
         max: [3, "successes can't be above 3"],
       },
-      deathSaveFailures: {
+      failures: {
         type: Number,
         default: 0,
         min: [0, "failures can't be below 0"],
@@ -305,7 +291,6 @@ const characterSchema = new Schema(
             default: "weapon name",
             minlength: [1, "Attack name can't be empty"],
             maxlength: [100, "Attack name can't be longer than 100 characters"],
-            required: true,
           },
           attackBonus: {
             type: Number,
