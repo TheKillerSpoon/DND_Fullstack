@@ -37,12 +37,27 @@ const traitsIdealsBondsFlaws = () => {
   TIBF.forEach((_TIBF) => {
     TIBFObject[_TIBF] = {
       type: String,
-      maxlength: 500,
-      minlength: 0,
+      maxlength: [500, `${_TIBF} can't be longer than 500 characters`],
+      minlength: [0, `Not possible to have less than 0 characters`],
       default: "",
     };
   });
   return TIBFObject;
+};
+
+// health related fields
+const healthFields = ["maxHealth", "currentHealth", "temporaryHealth"];
+const health = () => {
+  let healthObject = {};
+  healthFields.forEach((health) => {
+    healthObject[health] = {
+      type: Number,
+      default: 0,
+      min: [0, `${health} can't be below 0`],
+      max: [999, `${health} can't be above 999`],
+    };
+  });
+  return healthObject;
 };
 
 const characterSchema = new Schema(
@@ -144,15 +159,19 @@ const characterSchema = new Schema(
       type: Number,
       default: 0,
       min: [0, "Charaters xp can't go below 0"],
+      max: [1000000, "Max experience is 1,000,000"],
     },
     //* player name -------------------------------------------------------------------------
     playerName: {
       type: String,
+      default: "Nerd",
       maxlength: [50, "Player name can't be longer than 50 characters"],
       minlength: [1, "Player name can't be empty"],
     },
     //* stats -------------------------------------------------------------------------------
-    ...statsTypes(),
+    stats: {
+      ...statsTypes(),
+    },
     //* inspiration -------------------------------------------------------------------------
     inspiration: {
       type: Boolean,
@@ -236,59 +255,102 @@ const characterSchema = new Schema(
     },
     //* health ------------------------------------------------------------------------------
     health: {
-      type: Number,
-      hitPoints: {
-        max: { type: Number, default: 1, min: 1 },
-        current: { type: Number, default: 0, min: 0 },
-        temporary: { type: Number, default: 0, min: 0 },
+      max: {
+        type: Number,
+        default: 0,
+        min: [0, "Max health can't be below 0"],
+        max: [1000, "Max health can't be above 1000"],
+      },
+      current: {
+        type: Number,
+        default: 0,
+        min: [0, "Current health can't be below 0"],
+        max: [1000, "Current health can't be above 1000"],
+      },
+      temporary: {
+        type: Number,
+        default: 0,
+        min: [0, "Temporary health can't be below 0"],
+        max: [1000, "Temporary health can't be above 1000"],
       },
     },
     //* hit dice ----------------------------------------------------------------------------
     dice: {
       type: Number,
       default: 4,
-      enum: hitDice,
+      enum: { values: hitDice, message: "Invalid hit dice" },
     },
     //* death saves -------------------------------------------------------------------------
     deathSaves: {
-      successes: { type: Number, default: 0, min: 0, max: 3 },
-      failures: { type: Number, default: 0, min: 0, max: 3 },
+      deathSaveSuccesses: {
+        type: Number,
+        default: 0,
+        min: [0, "successes can't be below 0"],
+        max: [3, "successes can't be above 3"],
+      },
+      deathSaveFailures: {
+        type: Number,
+        default: 0,
+        min: [0, "failures can't be below 0"],
+        max: [3, "failures can't be above 3"],
+      },
     },
     //* attacks and spellcasting ------------------------------------------------------------
-    attack: [
-      {
-        attackName: {
-          type: String,
-          minlength: 1,
-          maxlength: 100,
-          required: true,
-        },
-        attackBonus: { type: Number, default: 0, min: -20, max: 20 },
-        damage: {
-          hits: { type: Number, default: 1, min: 1, required: true },
-          hitDice: {
-            type: Number,
-            enum: hitDice,
+    attack: {
+      type: [
+        new Schema({
+          attackName: {
+            type: String,
+            required: true,
+            default: "weapon name",
+            minlength: [1, "Attack name can't be empty"],
+            maxlength: [100, "Attack name can't be longer than 100 characters"],
             required: true,
           },
-        },
-        damageType: { type: Number, min: 1, max: 50 },
-      },
-    ],
+          attackBonus: {
+            type: Number,
+            default: 0,
+            min: [-20, "Attack bonus can't be below -20"],
+            max: [20, "Attack bonus can't be above 20"],
+          },
+          damage: {
+            hits: {
+              type: Number,
+              default: 1,
+              min: [1, "Damage hits can't be below 1"],
+              max: [10, "Damage hits can't be above 10"],
+            },
+            hitDice: {
+              type: Number,
+              enum: { values: hitDice, message: "invalid hit dice" },
+              default: 4,
+            },
+          },
+          damageType: {
+            type: Number,
+            default: 0,
+            min: [0, "Damage type can't be below 0"],
+            max: [50, "Damage type can't be above 50"],
+          },
+        }),
+      ],
+    },
     //* equipment ---------------------------------------------------------------------------
     equipment: {
       type: [String],
       default: [],
     },
     //* personal traits, ideals, bonds, and flaws -------------------------------------------
-    ...traitsIdealsBondsFlaws(),
+    personality: {
+      ...traitsIdealsBondsFlaws(),
+    },
     //* features and traits -----------------------------------------------------------------
     featuresTraits: {
       type: [String],
       default: [],
     },
   },
-  { timestamps: true, strict: true }
+  { timestamps: true }
 );
 
 const character = mongoose.model("character", characterSchema);
@@ -296,20 +358,19 @@ const character = mongoose.model("character", characterSchema);
 character.deleteMany({}).then(() => {
   const _character = new character({
     name: "Test Character",
-    class: "barbarian",
+    class: "bard",
     strength: 15,
 
     saves: ["strength", "constitution"],
 
-    attack: {
-      attackName: "Test Attack",
-      attackBonus: 5,
-      damage: {
-        hits: 1,
-        hitDice: 4,
+    attack: [
+      {
+        attackName: "Test Attack",
       },
-      damageType: 1,
-    },
+      {
+        attackName: "yes",
+      },
+    ],
   });
   _character
     .save()
