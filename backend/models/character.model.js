@@ -243,8 +243,8 @@ const characterSchema = new Schema(
     health: {
       max: {
         type: Number,
-        default: 0,
-        min: [0, "Max health can't be below 0"],
+        default: 1,
+        min: [1, "Max health can't be below 0"],
         max: [1000, "Max health can't be above 1000"],
       },
       current: {
@@ -319,6 +319,7 @@ const characterSchema = new Schema(
           },
         }),
       ],
+      default: [],
     },
     //* equipment ---------------------------------------------------------------------------
     equipment: {
@@ -340,27 +341,27 @@ const characterSchema = new Schema(
 
 const character = mongoose.model("character", characterSchema);
 
-character.deleteMany({}).then(() => {
-  const _character = new character({
-    name: "Test Character",
-    class: "bard",
-    strength: 15,
+// character.deleteMany({}).then(() => {
+//   const _character = new character({
+//     name: "Test Character",
+//     class: "bard",
+//     strength: 15,
 
-    saves: ["strength", "constitution"],
+//     saves: ["strength", "constitution"],
 
-    attack: [
-      {
-        attackName: "Test Attack",
-      },
-      {
-        attackName: "yes",
-      },
-    ],
-  });
-  _character
-    .save()
-    .then(() => console.log("Character saved successfully"))
-    .catch((error) => console.error("Error saving character:", error));
-});
+//     attack: [
+//       {
+//         attackName: "Test Attack",
+//       },
+//       {
+//         attackName: "yes",
+//       },
+//     ],
+//   });
+//   _character
+//     .save()
+//     .then(() => console.log("Character saved successfully"))
+//     .catch((error) => console.error("Error saving character:", error));
+// });
 
 export default mongoose.model("character", characterSchema);

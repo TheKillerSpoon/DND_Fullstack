@@ -11,4 +11,15 @@ export const getCharacter = async () => {
     throw new Error("Der skete en fejl:");
   }
 };
-9;
+
+// create a new character
+export const createCharacter = async (body) => {
+  try {
+    await dbConnect();
+    const character = await characterModel.create(body);
+    return character;
+  } catch (error) {
+    console.error("something went wrong:", error);
+    throw new Error("something went wrong:", error);
+  }
+};
