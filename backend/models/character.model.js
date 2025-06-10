@@ -71,6 +71,7 @@ const characterSchema = new Schema(
         message: "Invalid class",
       },
       lowercase: true,
+      default: "",
     },
     //* level -------------------------------------------------------------------------------
     level: {
@@ -97,6 +98,7 @@ const characterSchema = new Schema(
         message: "Invalid race",
       },
       lowercase: true,
+      default: "",
     },
     //* background --------------------------------------------------------------------------
     background: {
@@ -119,6 +121,7 @@ const characterSchema = new Schema(
         message: "Invalid background",
       },
       lowercase: true,
+      default: "",
     },
     //* alignment ---------------------------------------------------------------------------
     alignment: {
@@ -138,6 +141,7 @@ const characterSchema = new Schema(
         message: "Invalid alignment",
       },
       lowercase: true,
+      default: "",
     },
     //* experience --------------------------------------------------------------------------
     experience: {
@@ -173,6 +177,7 @@ const characterSchema = new Schema(
     saves: {
       type: [String],
       enum: { values: stats, message: "Invalid saving throw" },
+      default: [],
     },
     //* skills ------------------------------------------------------------------------------
     skills: {
@@ -200,6 +205,7 @@ const characterSchema = new Schema(
         ],
         message: "Invalid skill",
       },
+      default: [],
     },
     //* passive wisdom (perception) ---------------------------------------------------------
     passiveWisdom: {
