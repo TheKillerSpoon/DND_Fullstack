@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 //! This hook provides functions to interact with a REST API for managing characters and their weapons.
-const API_URL = "http://localhost:3042";
+const API_URL = import.meta.env.VITE_BACKEND_URL;
 
 export const useFetch = () => {
   const [characters, setCharacters] = useState([]);
