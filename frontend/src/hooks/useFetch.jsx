@@ -1,7 +1,25 @@
 import { useState } from "react";
 
 //! This hook provides functions to interact with a REST API for managing characters and their weapons.
-const API_URL = import.meta.env.VITE_BACKEND_URL;
+// const API_URL = import.meta.env.VITE_BACKEND_URL.endsWith("/")
+//   ? import.meta.env.VITE_BACKEND_URL.slice(0, -1)
+//   : import.meta.env.VITE_BACKEND_URL;
+
+const API_URL = (() => {
+  if (!import.meta.env.VITE_BACKEND_URL) {
+    throw new Error(
+      "VITE_BACKEND_URL is not defined in the environment variables"
+    );
+  }
+
+  let url = import.meta.env.VITE_BACKEND_URL;
+
+  while (url.endsWith("/")) {
+    url = url.slice(0, -1);
+  }
+
+  return url;
+})();
 
 export const useFetch = () => {
   const [characters, setCharacters] = useState([]);
@@ -105,7 +123,7 @@ export const useFetch = () => {
       if (!response.ok) {
         throw new Error("Failed to delete character");
       }
-      setCharacters((prev) => prev.filter((char) => char.id !== id));
+      getAllCharacters(); // Refresh the list after deletion
     } catch (error) {
       setError(error.message);
     } finally {
