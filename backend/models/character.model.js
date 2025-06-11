@@ -98,7 +98,7 @@ const characterSchema = new Schema(
         message: "Invalid race",
       },
       lowercase: true,
-      default: "",
+      default: "human",
     },
     //* background --------------------------------------------------------------------------
     background: {
@@ -121,7 +121,7 @@ const characterSchema = new Schema(
         message: "Invalid background",
       },
       lowercase: true,
-      default: "",
+      default: "acolyte",
     },
     //* alignment ---------------------------------------------------------------------------
     alignment: {
@@ -141,7 +141,7 @@ const characterSchema = new Schema(
         message: "Invalid alignment",
       },
       lowercase: true,
-      default: "",
+      default: "lawful good",
     },
     //* experience --------------------------------------------------------------------------
     experience: {

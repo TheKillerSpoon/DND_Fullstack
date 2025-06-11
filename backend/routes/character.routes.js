@@ -4,6 +4,8 @@ import Character from "../models/character.model.js";
 
 const characterRoute = express.Router();
 
+//! universal routes -----------------------------------------------------------------
+
 // get all characters
 characterRoute.get("/characters", async (req, res) => {
   try {
@@ -46,6 +48,8 @@ characterRoute.get("/character/:id", async (req, res) => {
     res.status(500).send("Server-error");
   }
 });
+
+//! characters routes ------------------------------------------------------------------
 
 // add a new character
 characterRoute.post("/character", async (req, res) => {
@@ -128,7 +132,7 @@ characterRoute.delete("/character/:id", async (req, res) => {
   }
 });
 
-// weapon routes
+//! weapon routes -----------------------------------------------------------------------------
 
 // add a new character attack
 characterRoute.post("/weapon/:id", async (req, res) => {
