@@ -14,11 +14,19 @@ import Equipment from "../../components/equipment/equipment.jsx";
 import Personality from "../../components/personality/personality.jsx";
 import Traits from "../../components/traits/traits.jsx";
 
+//? Hooks ------------------------------------------------------
+import { useFetch } from "../../hooks/useFetch.jsx";
+
 //? Character Page -----------------------------------------------
 function CharacterPage() {
+  const { character } = useFetch();
+
+  character && console.log("Selected Character:", character);
+
   return (
     <>
       Character
+      <a href="/">test</a>
       <p></p>
       <Character />
       <p></p>

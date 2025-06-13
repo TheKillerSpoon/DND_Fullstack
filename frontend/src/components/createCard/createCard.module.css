@@ -1,0 +1,19 @@
+& .characterCard {
+  border: 1px solid #000;
+  border-radius: 15px;
+  padding: 15px;
+  max-width: 250px;
+  min-height: 325px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+
+  & form {
+    & input {
+      display: block;
+    }
+  }
+}

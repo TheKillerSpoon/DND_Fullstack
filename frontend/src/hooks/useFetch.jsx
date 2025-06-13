@@ -1,9 +1,6 @@
 import { useState } from "react";
 
 //! This hook provides functions to interact with a REST API for managing characters and their weapons.
-// const API_URL = import.meta.env.VITE_BACKEND_URL.endsWith("/")
-//   ? import.meta.env.VITE_BACKEND_URL.slice(0, -1)
-//   : import.meta.env.VITE_BACKEND_URL;
 
 const API_URL = (() => {
   if (!import.meta.env.VITE_BACKEND_URL) {
@@ -21,8 +18,11 @@ const API_URL = (() => {
   return url;
 })();
 
+//! useFetch ----------------------------------------------------
+
 export const useFetch = () => {
   const [characters, setCharacters] = useState([]);
+  const [character, setCharacter] = useState(null);
   const [Error, setError] = useState(null);
   const [IsLoading, setIsLoading] = useState(false);
 
@@ -37,7 +37,6 @@ export const useFetch = () => {
         throw new Error("Failed to fetch characters");
       }
       const data = await response.json();
-      console.log("Characters fetched:", data.data);
       setCharacters(data.data);
     } catch (error) {
       setError(error.message);
@@ -55,7 +54,7 @@ export const useFetch = () => {
         throw new Error("Failed to fetch character");
       }
       const data = await response.json();
-      return data;
+      setCharacter(data.data);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -64,7 +63,6 @@ export const useFetch = () => {
   };
 
   //! Characters ------------------------------------------
-
   // Create character
   const createCharacter = async (characterData) => {
     setIsLoading(true);
@@ -79,8 +77,7 @@ export const useFetch = () => {
       if (!response.ok) {
         throw new Error("Failed to create character");
       }
-      const data = await response.json();
-      setCharacters((prev) => [...prev, data]);
+      getAllCharacters(); // Refresh the list after creating a character
     } catch (error) {
       setError(error.message);
     } finally {
@@ -102,10 +99,6 @@ export const useFetch = () => {
       if (!response.ok) {
         throw new Error("Failed to update character");
       }
-      const data = await response.json();
-      setCharacters((prev) =>
-        prev.map((char) => (char.id === id ? data : char))
-      );
     } catch (error) {
       setError(error.message);
     } finally {
@@ -123,7 +116,7 @@ export const useFetch = () => {
       if (!response.ok) {
         throw new Error("Failed to delete character");
       }
-      getAllCharacters(); // Refresh the list after deletion
+      getAllCharacters(); // Refresh the list after deleting a character
     } catch (error) {
       setError(error.message);
     } finally {
@@ -147,8 +140,6 @@ export const useFetch = () => {
       if (!response.ok) {
         throw new Error("Failed to create weapon");
       }
-      const data = await response.json();
-      setCharacters((prev) => [...prev, data]);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -170,19 +161,6 @@ export const useFetch = () => {
       if (!response.ok) {
         throw new Error("Failed to update weapon");
       }
-      const data = await response.json();
-      setCharacters((prev) =>
-        prev.map((char) =>
-          char.id === id
-            ? {
-                ...char,
-                weapons: char.weapons.map((w) =>
-                  w.id === weaponId ? data : w
-                ),
-              }
-            : char
-        )
-      );
     } catch (error) {
       setError(error.message);
     } finally {
@@ -200,12 +178,6 @@ export const useFetch = () => {
       if (!response.ok) {
         throw new Error("Failed to delete weapon");
       }
-      setCharacters((prev) =>
-        prev.map((char) => ({
-          ...char,
-          weapons: char.weapons.filter((w) => w.id !== weaponId),
-        }))
-      );
     } catch (error) {
       setError(error.message);
     } finally {
@@ -216,6 +188,7 @@ export const useFetch = () => {
   return {
     //* misc
     characters,
+    character,
     Error,
     IsLoading,
     //* Universal

@@ -4,6 +4,8 @@ import Character from "../models/character.model.js";
 
 const characterRoute = express.Router();
 
+const test = ["class", "race", "background", "alignment", "name"];
+
 //! universal routes -----------------------------------------------------------------
 
 // get all characters
@@ -54,6 +56,11 @@ characterRoute.get("/character/:id", async (req, res) => {
 // add a new character
 characterRoute.post("/character", async (req, res) => {
   try {
+    let body = req.body;
+    test.map((key) => {
+      if (body[key] == "" || !body[key]) body[key] = undefined;
+    });
+
     var character = new Character(req.body);
     await character.save();
     res.status(201).send(character);

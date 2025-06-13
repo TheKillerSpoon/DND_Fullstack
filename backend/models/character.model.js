@@ -71,7 +71,7 @@ const characterSchema = new Schema(
         message: "Invalid class",
       },
       lowercase: true,
-      default: "",
+      default: "barbarian",
     },
     //* level -------------------------------------------------------------------------------
     level: {

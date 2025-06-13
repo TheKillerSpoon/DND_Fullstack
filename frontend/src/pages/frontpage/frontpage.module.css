@@ -37,5 +37,11 @@
       font-size: 200px;
       color: #555;
     }
+
+    & form {
+      & input {
+        display: block;
+      }
+    }
   }
 }
