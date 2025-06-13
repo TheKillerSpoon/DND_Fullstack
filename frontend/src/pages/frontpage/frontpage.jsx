@@ -18,12 +18,12 @@ function Frontpage() {
 
   useEffect(() => {
     getAllCharacters();
+    localStorage.removeItem("character");
   }, []);
 
   return (
     <>
       <h1>FrontPage</h1>
-      <a href="/character">test</a>
       <section className={styles.frontpage}>
         <CharacterCard
           characters={characters}

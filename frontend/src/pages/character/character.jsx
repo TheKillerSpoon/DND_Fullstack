@@ -14,19 +14,30 @@ import Equipment from "../../components/equipment/equipment.jsx";
 import Personality from "../../components/personality/personality.jsx";
 import Traits from "../../components/traits/traits.jsx";
 
+//? React ------------------------------------------------------
+import { useEffect } from "react";
+
 //? Hooks ------------------------------------------------------
 import { useFetch } from "../../hooks/useFetch.jsx";
 
 //? Character Page -----------------------------------------------
 function CharacterPage() {
-  const { character } = useFetch();
+  const { getCharacterById, character } = useFetch();
+  useEffect(() => {
+    const CharacterID = localStorage.getItem("character");
+    if (CharacterID) {
+      getCharacterById(CharacterID);
+    } else {
+      window.location.pathname = "/";
+    }
+  }, []);
 
-  character && console.log("Selected Character:", character);
+  character && console.log(character);
 
   return (
     <>
       Character
-      <a href="/">test</a>
+      <a href="/">Frontpage</a>
       <p></p>
       <Character />
       <p></p>

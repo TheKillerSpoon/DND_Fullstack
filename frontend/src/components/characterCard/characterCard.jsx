@@ -1,19 +1,13 @@
 //? Styles -----------------------------------------------------
 import styles from "./characterCard.module.css";
 
-//? Hooks ------------------------------------------------------
-import { useFetch } from "../../hooks/useFetch.jsx";
-
 //? CharacterCard ----------------------------------------------
 function CharacterCard({ characters, deleteCharacter }) {
-  const { getCharacterById, character } = useFetch();
-
   const selectCharacter = (characterId) => {
-    console.log("Selected Character ID:", characterId);
-    getCharacterById(characterId);
+    localStorage.removeItem("character");
+    localStorage.setItem("character", characterId);
+    window.location.pathname = "/character";
   };
-
-  character && console.log("Selected Character:", character);
 
   return characters.map((character) => (
     <div key={character._id} className={styles.characterCard}>
