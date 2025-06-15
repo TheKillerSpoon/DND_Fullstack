@@ -1,3 +1,6 @@
+//? Styles -----------------------------------------------------
+import styles from "./character.module.css";
+
 //? Components --------------------------------------------------
 import Character from "../../components/character/character.jsx";
 import Info from "../../components/info/info.jsx";
@@ -35,38 +38,66 @@ function CharacterPage() {
   character && console.log(character);
 
   return (
-    <>
-      Character
-      <a href="/">Frontpage</a>
-      <p></p>
-      <Character />
-      <p></p>
-      <Info />
-      <p></p>
-      <Stats />
-      <p></p>
-      <Inspiration />
-      <p></p>
-      <Bonus />
-      <p></p>
-      <Saving />
-      <p></p>
-      <Skills />
-      <p></p>
-      <Passive />
-      <p></p>
-      <ProfLang />
-      <p></p>
-      <Def />
-      <p></p>
-      <Weapons />
-      <p></p>
-      <Equipment />
-      <p></p>
-      <Personality />
-      <p></p>
-      <Traits />
-    </>
+    character && (
+      <ul className={styles.test}>
+        <li>
+          <h1>Character</h1>
+        </li>
+        <li>
+          <a href="/">Frontpage</a>
+        </li>
+        <li>
+          <Character name={character.name} />
+        </li>
+        <li>
+          <Info
+            characterClass={character.class}
+            level={character.level}
+            race={character.race}
+            background={character.background}
+            alignment={character.alignment}
+            playerName={character.playerName}
+            xp={character.experience}
+          />
+        </li>
+        <li>
+          <Stats />
+        </li>
+        <li>
+          <Inspiration />
+        </li>
+        <li>
+          <Bonus />
+        </li>
+        <li>
+          <Saving />
+        </li>
+        <li>
+          <Skills />
+        </li>
+        <li>
+          <Passive />
+        </li>
+        <li>
+          <ProfLang />
+        </li>
+        <li>
+          <Def />
+        </li>
+        <li>
+          <Weapons />
+        </li>
+        <li>
+          <Equipment />
+        </li>
+        <li>
+          <Personality />
+        </li>
+        <li>
+          <Traits />
+        </li>
+      </ul>
+    )
   );
 }
 

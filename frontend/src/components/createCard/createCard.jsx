@@ -8,6 +8,20 @@ import { useForm } from "react-hook-form";
 function CreateCard({ characters, createCharacter }) {
   const { register, handleSubmit, setValue } = useForm();
 
+  const classInfo = (ability, hitDie, saves) => {
+    return `Ability: ${ability}. Hit die: D${hitDie}. Saves: ${saves}.`;
+  };
+
+  const raceInfo = (test) => {
+    return test.map((item, index) => {
+      if (index !== test.length - 1) {
+        return `${item}, `;
+      } else {
+        return `${item}.`;
+      }
+    });
+  };
+
   return (
     characters.length < 10 && (
       <div className={styles.characterCard}>
@@ -29,37 +43,139 @@ function CreateCard({ characters, createCharacter }) {
             placeholder="Character Name *"
             required
           />
+
           <label htmlFor="class">Choose a class</label>
-          <select id="class" {...register("class")}>
-            <option value="">--Please choose an option--</option>
-            <option value="barbarian">Barbarian</option>
-            <option value="bard">Bard</option>
-            <option value="cleric">Cleric</option>
-            <option value="druid">Druid</option>
-            <option value="fighter">Fighter</option>
-            <option value="monk">Monk</option>
-            <option value="paladin">Paladin</option>
-            <option value="ranger">Ranger</option>
-            <option value="rogue">Rogue</option>
-            <option value="sorcerer">Sorcerer</option>
-            <option value="warlock">Warlock</option>
-            <option value="wizard">Wizard</option>
-            <option value="artificer">Artificer</option>
-          </select>
+          <input
+            type="text"
+            placeholder="Class"
+            list="class"
+            {...register("class")}
+          />
+          <datalist id="class">
+            <option value="Barbarian">
+              {...classInfo("Strength", 12, "Strength & Constitution")}
+            </option>
+            <option value="Bard">
+              {...classInfo("Charisma", 8, "Dexterity & Charisma")}
+            </option>
+            <option value="Cleric">
+              {...classInfo("Wisdom", 8, "Wisdom & Charisma")}
+            </option>
+            <option value="Druid">
+              {...classInfo("Wisdom", 8, "Intelligence & Wisdom")}
+            </option>
+            <option value="Fighter">
+              {...classInfo(
+                "Strength or Dexterity",
+                10,
+                "Strength & Constitution"
+              )}
+            </option>
+            <option value="Monk">
+              {...classInfo("Dexterity & Wisdom", 8, "Strength & Dexterity")}
+            </option>
+            <option value="Paladin">
+              {...classInfo("Strength & Charisma", 10, "Wisdom & Charisma")}
+            </option>
+            <option value="Ranger">
+              {...classInfo("Dexterity & Wisdom", 10, "Strength & Dexterity")}
+            </option>
+            <option value="Rogue">
+              {...classInfo("Dexterity", 8, "Dexterity & Intelligence")}
+            </option>
+            <option value="Sorcerer">
+              {...classInfo("Charisma", 6, "Constitution & Charisma")}
+            </option>
+            <option value="Warlock">
+              {...classInfo("Charisma", 8, "Wisdom & Charisma")}
+            </option>
+            <option value="Wizard">
+              {...classInfo("Intelligence", 6, "Intelligence & Wisdom")}
+            </option>
+            <option value="Artificer">
+              {...classInfo("Intelligence", 8, "Constitution & Intelligence")}
+            </option>
+          </datalist>
 
           <label htmlFor="race">Choose a race</label>
-          <select id="race" {...register("race")}>
-            <option value="">--Please choose an option--</option>
-            <option value="human">Human</option>
-            <option value="elf">Elf</option>
-            <option value="dwarf">Dwarf</option>
-            <option value="halfling">Halfling</option>
-            <option value="dragonborn">Dragonborn</option>
-            <option value="gnome">Gnome</option>
-            <option value="half-elf">Half-Elf</option>
-            <option value="half-orc">Half-Orc</option>
-            <option value="tiefling">Tiefling</option>
-          </select>
+          <input
+            type="text"
+            placeholder="Race"
+            list="race"
+            {...register("race")}
+          />
+          <datalist id="race">
+            <option value="Aasimar">
+              {...raceInfo([
+                "Celestial Resistance",
+                "Darkvision",
+                "Healing Hands",
+                "Light Bearer",
+                "Celestial Revelation",
+              ])}
+            </option>
+            <option value="Dragonborn">
+              {...raceInfo([
+                "Dragon Ancestry",
+                "Breath Weapon",
+                "Damage Resistance",
+                "Darkvision",
+                "Draconic Flight",
+              ])}
+            </option>
+            <option value="Dwarf">
+              {...raceInfo([
+                "Darkvision",
+                "Dwarven Resilience",
+                "Dwarven Toughness",
+                "Stonecunning",
+              ])}
+            </option>
+            <option value="Elf">
+              {...raceInfo([
+                "Darkvision",
+                "Elven Lineage",
+                "Fey Ancestry",
+                "Keen Senses",
+                "Trance",
+              ])}
+            </option>
+            <option value="Gnome">
+              {...raceInfo([
+                "Darkvision",
+                "Gnomish Cunning",
+                "Gnomish lineage",
+              ])}
+            </option>
+            <option value="Goliath">
+              {...raceInfo(["Giant Ancestry", "Large Form", "Powerful Build"])}
+            </option>
+            <option value="Halfling">
+              {...raceInfo([
+                "Brave",
+                "Halfling Nimbleness",
+                "Luck",
+                "Naturally Stealthy",
+              ])}
+            </option>
+            <option value="Human">
+              {...raceInfo(["Resourceful", "Skillful", "Verdatile"])}
+            </option>
+            <option value="Orc">
+              {...raceInfo([
+                "Adrenaline Rush",
+                "Darkvision",
+                "Relentless Endurance",
+              ])}
+            </option>
+            <option value="Tiefling">
+              {...raceInfo([
+                "Darkvision",
+                "Fiendish Legacy",
+                "Otherworldly Presence",
+              ])}
+            </option>
+          </datalist>
 
           <label htmlFor="background">Choose a background</label>
           <select id="background" {...register("background")}>
