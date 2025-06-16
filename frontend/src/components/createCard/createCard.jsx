@@ -9,17 +9,17 @@ function CreateCard({ characters, createCharacter }) {
   const { register, handleSubmit, setValue } = useForm();
 
   const classInfo = (ability, hitDie, saves) => {
-    return `Ability: ${ability}. Hit die: D${hitDie}. Saves: ${saves}.`;
+    return `Ability: ${ability}. Hit die: D${hitDie}. Saves: ${saves.join(
+      " & "
+    )}.`;
   };
 
-  const raceInfo = (test) => {
-    return test.map((item, index) => {
-      if (index !== test.length - 1) {
-        return `${item}, `;
-      } else {
-        return `${item}.`;
-      }
-    });
+  const raceInfo = (Traits) => {
+    return `${Traits.join(", ")}.`;
+  };
+
+  const BackgroundInfo = (Feature, Proficiencies) => {
+    return `Feat: ${Feature}. Proficiencies: ${Proficiencies.join(", ")}.`;
   };
 
   return (
@@ -53,47 +53,52 @@ function CreateCard({ characters, createCharacter }) {
           />
           <datalist id="class">
             <option value="Barbarian">
-              {...classInfo("Strength", 12, "Strength & Constitution")}
+              {...classInfo("Strength", 12, ["Strength", "Constitution"])}
             </option>
             <option value="Bard">
-              {...classInfo("Charisma", 8, "Dexterity & Charisma")}
+              {...classInfo("Charisma", 8, ["Dexterity", "Charisma"])}
             </option>
             <option value="Cleric">
-              {...classInfo("Wisdom", 8, "Wisdom & Charisma")}
+              {...classInfo("Wisdom", 8, ["Wisdom", "Charisma"])}
             </option>
             <option value="Druid">
-              {...classInfo("Wisdom", 8, "Intelligence & Wisdom")}
+              {...classInfo("Wisdom", 8, ["Intelligence", "Wisdom"])}
             </option>
             <option value="Fighter">
-              {...classInfo(
-                "Strength or Dexterity",
-                10,
-                "Strength & Constitution"
-              )}
+              {...classInfo("Strength or Dexterity", 10, [
+                "Strength",
+                "Constitution",
+              ])}
             </option>
             <option value="Monk">
-              {...classInfo("Dexterity & Wisdom", 8, "Strength & Dexterity")}
+              {...classInfo("Dexterity & Wisdom", 8, ["Strength", "Dexterity"])}
             </option>
             <option value="Paladin">
-              {...classInfo("Strength & Charisma", 10, "Wisdom & Charisma")}
+              {...classInfo("Strength & Charisma", 10, ["Wisdom", "Charisma"])}
             </option>
             <option value="Ranger">
-              {...classInfo("Dexterity & Wisdom", 10, "Strength & Dexterity")}
+              {...classInfo("Dexterity & Wisdom", 10, [
+                "Strength",
+                "Dexterity",
+              ])}
             </option>
             <option value="Rogue">
-              {...classInfo("Dexterity", 8, "Dexterity & Intelligence")}
+              {...classInfo("Dexterity", 8, ["Dexterity", "Intelligence"])}
             </option>
             <option value="Sorcerer">
-              {...classInfo("Charisma", 6, "Constitution & Charisma")}
+              {...classInfo("Charisma", 6, ["Constitution", "Charisma"])}
             </option>
             <option value="Warlock">
-              {...classInfo("Charisma", 8, "Wisdom & Charisma")}
+              {...classInfo("Charisma", 8, ["Wisdom", "Charisma"])}
             </option>
             <option value="Wizard">
-              {...classInfo("Intelligence", 6, "Intelligence & Wisdom")}
+              {...classInfo("Intelligence", 6, ["Intelligence", "Wisdom"])}
             </option>
             <option value="Artificer">
-              {...classInfo("Intelligence", 8, "Constitution & Intelligence")}
+              {...classInfo("Intelligence", 8, [
+                "Constitution",
+                "Intelligence",
+              ])}
             </option>
           </datalist>
 
@@ -178,21 +183,77 @@ function CreateCard({ characters, createCharacter }) {
           </datalist>
 
           <label htmlFor="background">Choose a background</label>
-          <select id="background" {...register("background")}>
-            <option value="">--Please choose an option--</option>
-            <option value="acolyte">Acolyte</option>
-            <option value="charlatan">Charlatan</option>
-            <option value="criminal">Criminal</option>
-            <option value="entertainer">Entertainer</option>
-            <option value="folk hero">Folk Hero</option>
-            <option value="guild artisan">Guild Artisan</option>
-            <option value="hermit">Hermit</option>
-            <option value="noble">Noble</option>
-            <option value="outlander">Outlander</option>
-            <option value="sage">Sage</option>
-            <option value="soldier">Soldier</option>
-            <option value="urchin">Urchin</option>
-          </select>
+          <input
+            type="text"
+            placeholder="Background"
+            list="background"
+            {...register("background")}
+          />
+          <datalist id="background" {...register("background")}>
+            <option value="Acolyte">
+              {...BackgroundInfo("Magic Initiate (Cleric)", [
+                "Insight",
+                "Religion",
+              ])}
+            </option>
+            <option value="Artisan">
+              {...BackgroundInfo("Crafter", ["Investigation", "Persuation"])}
+            </option>
+            <option value="Charlatan">
+              {...BackgroundInfo("Skilled", ["Deception", "Sleight of Hand"])}
+            </option>
+            <option value="Criminal">
+              {...BackgroundInfo("Alert", ["Stealth", "Sleight of Hand"])}
+            </option>
+            <option value="Entertainer">
+              {...BackgroundInfo("Musician", ["Acrobatics", "Performance"])}
+            </option>
+            <option value="Farmer">
+              {...BackgroundInfo("Tough", ["Animal Handling", "Nature"])}
+            </option>
+            <option value="Guard">
+              {...BackgroundInfo("Alert", ["Athletics", "Perception"])}
+            </option>
+            <option value="Guide">
+              {...BackgroundInfo("Magic Initiate (Druid)", [
+                "Stealth",
+                "Survival",
+              ])}
+            </option>
+            <option value="Hermit">
+              {...BackgroundInfo("Healer", ["Medicine", "Religion"])}
+            </option>
+            <option value="Merchant">
+              {...BackgroundInfo("Lucky", ["Animal Handling", "Persuasion"])}
+            </option>
+            <option value="Noble">
+              {...BackgroundInfo("Skilled", ["History", "Persuasion"])}
+            </option>
+            <option value="Sage">
+              {...BackgroundInfo("Magic Initiate (Wizard)", [
+                "Arcana",
+                "History",
+              ])}
+            </option>
+            <option value="Sailor">
+              {...BackgroundInfo("tavern Brawler", [
+                "Acrobatics",
+                "Perception",
+              ])}
+            </option>
+            <option value="Scribe">
+              {...BackgroundInfo("Skilled", ["Investigation", "Perception"])}
+            </option>
+            <option value="Soldier">
+              {...BackgroundInfo("Savage Attacker", [
+                "Athletics",
+                "Intimidation",
+              ])}
+            </option>
+            <option value="Wayfarer">
+              {...BackgroundInfo("lucky", ["Insight", "Stealth"])}
+            </option>
+          </datalist>
 
           <button type="submit">Create Character</button>
         </form>
