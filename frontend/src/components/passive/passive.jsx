@@ -1,5 +1,5 @@
-function Passive() {
-  return <>Passive</>;
+function Passive({ wisdom }) {
+  return <p>Passive: {wisdom}</p>;
 }
 
 export default Passive;

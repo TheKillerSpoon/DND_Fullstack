@@ -61,40 +61,47 @@ function CharacterPage() {
           />
         </li>
         <li>
-          <Stats />
+          <Stats stats={character.stats} />
         </li>
         <li>
-          <Inspiration />
+          <Inspiration Inspiration={character.inspiration} />
         </li>
         <li>
-          <Bonus />
+          <Bonus bonus={character.proficiencyBonus} />
         </li>
         <li>
-          <Saving />
+          <Saving saves={character.saves} />
         </li>
         <li>
-          <Skills />
+          <Skills skills={character.skills} />
         </li>
         <li>
-          <Passive />
+          <Passive wisdom={character.passiveWisdom} />
         </li>
         <li>
-          <ProfLang />
+          <ProfLang proficiencies={character.otherProficiencies} />
         </li>
         <li>
-          <Def />
+          <Def
+            armor={character.armorClass}
+            initiative={character.initiative}
+            speed={character.speed}
+            hitPoints={character.health}
+            hitDice={character.dice}
+            saves={character.deathSaves}
+          />
         </li>
         <li>
-          <Weapons />
+          <Weapons weapons={character.attack} />
         </li>
         <li>
-          <Equipment />
+          <Equipment equipment={character.equipment} />
         </li>
         <li>
-          <Personality />
+          <Personality personality={character.personality} />
         </li>
         <li>
-          <Traits />
+          <Traits traits={character.featuresTraits} />
         </li>
       </ul>
     )
