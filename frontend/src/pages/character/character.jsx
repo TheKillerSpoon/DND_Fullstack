@@ -17,6 +17,8 @@ import Equipment from "../../components/equipment/equipment.jsx";
 import Personality from "../../components/personality/personality.jsx";
 import Traits from "../../components/traits/traits.jsx";
 
+import Input from "../../components/input/input.jsx";
+
 //? React ------------------------------------------------------
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -36,6 +38,7 @@ function CharacterPage() {
     }
   }, []);
 
+  // This function is just for testing purposes, it logs the id and data to the console
   const test = (id, data) => {
     console.log("id", id);
     console.log("data", data);
@@ -47,6 +50,7 @@ function CharacterPage() {
     const commonProperties = {
       character: character,
       update: updateCharacter,
+      // update: test,
     };
     return commonProperties;
   };

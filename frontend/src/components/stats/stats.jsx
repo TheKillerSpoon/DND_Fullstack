@@ -1,11 +1,8 @@
+//? component to display and edit character information
+import Input from "../../components/input/input.jsx";
+
 function Stats({ character, update }) {
   // console.log(Object.keys(stats).map((key) => `${key}: ${stats[key]}`));
-
-  console.log(
-    Object.keys(character.stats)
-      .sort()
-      .map((key) => `${key}: ${character.stats[key]}`)
-  );
 
   return (
     <ul>
@@ -15,21 +12,13 @@ function Stats({ character, update }) {
           return (
             <li key={index}>
               {key}: {character.stats[key]}
-              <input
-                type="number"
+              <Input
                 id={key}
-                placeholder={character.stats[key]}
-                onBlur={(e) => {
-                  if (character[e.target.id] !== e.target.value) {
-                    update(character._id, {
-                      stats: {
-                        ...character.stats,
-                        [e.target.id]: e.target.value,
-                      },
-                    });
-                  }
-                }}
-                defaultValue={character.stats[key]}
+                type="number"
+                character={character}
+                update={update}
+                blur={"object"}
+                layer={"stats"}
               />
             </li>
           );

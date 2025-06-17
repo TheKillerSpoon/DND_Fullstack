@@ -1,19 +1,12 @@
+//? component to display and edit character information
+import Input from "../../components/input/input.jsx";
+
 function Character({ character, update }) {
   return (
     <ul>
-      <li>Character Name:</li>
+      <li>Character Name: {character.name}</li>
       <li>
-        <input
-          type="text"
-          id="name"
-          placeholder={character.name}
-          onBlur={(e) => {
-            if (character[e.target.id] !== e.target.value) {
-              update(character._id, { [e.target.id]: e.target.value });
-            }
-          }}
-          defaultValue={character.name}
-        />
+        <Input id="name" character={character} update={update} />
       </li>
     </ul>
   );
