@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { get } from "react-hook-form";
 
 //! This hook provides functions to interact with a REST API for managing characters and their weapons.
 
@@ -99,6 +100,8 @@ export const useFetch = () => {
       if (!response.ok) {
         throw new Error("Failed to update character");
       }
+      getCharacterById(id); // Refresh the character data after updating
+      // setCharacter(await response.json().data);
     } catch (error) {
       setError(error.message);
     } finally {

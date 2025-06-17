@@ -1,29 +1,29 @@
-function Def({ armor, initiative, speed, hitPoints, hitDice, saves }) {
+function Def({ character, update }) {
   return (
     <ul>
-      <li>Armor Class: {armor}</li>
-      <li>Initiative: {initiative}</li>
-      <li>Speed: {speed}</li>
+      <li>Armor Class: {character.armor}</li>
+      <li>Initiative: {character.initiative}</li>
+      <li>Speed: {character.speed}</li>
       <li>
         <p>Health:</p>
         <ul>
-          {Object.keys(hitPoints).map((key, index) => {
+          {Object.keys(character.health).map((key, index) => {
             return (
               <li key={index}>
-                {key}: {hitPoints[key]}
+                {key}: {character.health[key]}
               </li>
             );
           })}
         </ul>
       </li>
-      <li>Hit dice: D{hitDice}</li>
+      <li>Hit dice: D{character.dice}</li>
       <li>
         <p>Death Saves:</p>
         <ul>
-          {Object.keys(saves).map((key, index) => {
+          {Object.keys(character.deathSaves).map((key, index) => {
             return (
               <li key={index}>
-                {key}: {saves[key]}
+                {key}: {character.deathSaves[key]}
               </li>
             );
           })}

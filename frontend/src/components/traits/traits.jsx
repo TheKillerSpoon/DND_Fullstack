@@ -1,8 +1,8 @@
-function Traits({ traits }) {
+function Traits({ character, update }) {
   return (
     <ul>
       Traits:
-      {traits.map((trait, index) => (
+      {character.featuresTraits.map((trait, index) => (
         <li key={index}>{trait}</li>
       ))}
     </ul>

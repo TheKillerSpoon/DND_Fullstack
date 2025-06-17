@@ -1,11 +1,11 @@
-function Personality({ personality }) {
+function Personality({ character, update }) {
   return (
     <ul>
       Personality
-      {Object.keys(personality).map((key) => {
+      {Object.keys(character.personality).map((key) => {
         return (
           <li key={key}>
-            {key}: {personality[key]}
+            {key}: {character.personality[key]}
           </li>
         );
       })}

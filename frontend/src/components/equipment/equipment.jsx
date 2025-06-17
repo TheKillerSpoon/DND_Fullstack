@@ -1,8 +1,8 @@
-function Equipment({ equipment }) {
+function Equipment({ character, update }) {
   return (
     <ul>
       Equipment:{" "}
-      {equipment.map((equip) => (
+      {character.equipment.map((equip) => (
         <li key={equip}>{equip}</li>
       ))}
     </ul>

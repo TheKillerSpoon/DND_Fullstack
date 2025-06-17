@@ -1,12 +1,17 @@
 //? Styles -----------------------------------------------------
 import styles from "./characterCard.module.css";
 
+//? React ------------------------------------------------------
+import { useNavigate } from "react-router-dom";
+
 //? CharacterCard ----------------------------------------------
 function CharacterCard({ characters, deleteCharacter }) {
+  const navigate = useNavigate();
+
   const selectCharacter = (characterId) => {
     localStorage.removeItem("character");
     localStorage.setItem("character", characterId);
-    window.location.pathname = "/character";
+    navigate("/character");
   };
 
   return characters.map((character) => (

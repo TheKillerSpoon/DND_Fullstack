@@ -19,23 +19,37 @@ import Traits from "../../components/traits/traits.jsx";
 
 //? React ------------------------------------------------------
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 //? Hooks ------------------------------------------------------
 import { useFetch } from "../../hooks/useFetch.jsx";
 
 //? Character Page -----------------------------------------------
 function CharacterPage() {
-  const { getCharacterById, character } = useFetch();
+  const { getCharacterById, updateCharacter, character } = useFetch();
   useEffect(() => {
     const CharacterID = localStorage.getItem("character");
     if (CharacterID) {
       getCharacterById(CharacterID);
     } else {
-      window.location.pathname = "/";
+      useNavigate().navigate("/");
     }
   }, []);
 
+  const test = (id, data) => {
+    console.log("id", id);
+    console.log("data", data);
+  };
+
   character && console.log(character);
+
+  const setCommonProperties = () => {
+    const commonProperties = {
+      character: character,
+      update: updateCharacter,
+    };
+    return commonProperties;
+  };
 
   return (
     character && (
@@ -47,61 +61,46 @@ function CharacterPage() {
           <a href="/">Frontpage</a>
         </li>
         <li>
-          <Character name={character.name} />
+          <Character {...setCommonProperties()} />
         </li>
         <li>
-          <Info
-            characterClass={character.class}
-            level={character.level}
-            race={character.race}
-            background={character.background}
-            alignment={character.alignment}
-            playerName={character.playerName}
-            xp={character.experience}
-          />
+          <Info {...setCommonProperties()} />
         </li>
         <li>
-          <Stats stats={character.stats} />
+          <Stats {...setCommonProperties()} />
         </li>
         <li>
-          <Inspiration Inspiration={character.inspiration} />
+          <Inspiration {...setCommonProperties()} />
         </li>
         <li>
-          <Bonus bonus={character.proficiencyBonus} />
+          <Bonus {...setCommonProperties()} />
         </li>
         <li>
-          <Saving saves={character.saves} />
+          <Saving {...setCommonProperties()} />
         </li>
         <li>
-          <Skills skills={character.skills} />
+          <Skills {...setCommonProperties()} />
         </li>
         <li>
-          <Passive wisdom={character.passiveWisdom} />
+          <Passive {...setCommonProperties()} />
         </li>
         <li>
-          <ProfLang proficiencies={character.otherProficiencies} />
+          <ProfLang {...setCommonProperties()} />
         </li>
         <li>
-          <Def
-            armor={character.armorClass}
-            initiative={character.initiative}
-            speed={character.speed}
-            hitPoints={character.health}
-            hitDice={character.dice}
-            saves={character.deathSaves}
-          />
+          <Def {...setCommonProperties()} />
         </li>
         <li>
-          <Weapons weapons={character.attack} />
+          <Weapons {...setCommonProperties()} />
         </li>
         <li>
-          <Equipment equipment={character.equipment} />
+          <Equipment {...setCommonProperties()} />
         </li>
         <li>
-          <Personality personality={character.personality} />
+          <Personality {...setCommonProperties()} />
         </li>
         <li>
-          <Traits traits={character.featuresTraits} />
+          <Traits {...setCommonProperties()} />
         </li>
       </ul>
     )

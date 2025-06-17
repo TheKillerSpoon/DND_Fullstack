@@ -1,8 +1,8 @@
-function Saving({ saves }) {
+function Saving({ character, update }) {
   return (
     <ul>
       <li>Saving throws:</li>
-      {saves.map((save, index) => (
+      {character.saves.map((save, index) => (
         <li key={index}>{save}</li>
       ))}
     </ul>

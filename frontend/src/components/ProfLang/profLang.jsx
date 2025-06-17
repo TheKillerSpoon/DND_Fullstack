@@ -1,8 +1,8 @@
-function ProfLang({ proficiencies }) {
+function ProfLang({ character, update }) {
   return (
     <ul>
       <li>ProfLang:</li>
-      {proficiencies.map((proficiency, index) => (
+      {character.otherProficiencies.map((proficiency, index) => (
         <li key={index}>{proficiency}</li>
       ))}
     </ul>

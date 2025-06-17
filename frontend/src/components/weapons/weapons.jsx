@@ -1,4 +1,4 @@
-function Weapons({ weapons }) {
+function Weapons({ character, update }) {
   // console.log("Weapons:", weapons);
   // console.log(
   //   weapons.map((weapon) =>
@@ -15,7 +15,8 @@ function Weapons({ weapons }) {
 
   return (
     <ul>
-      {weapons.map((weapon) => (
+      <li>Weapons:</li>
+      {character.attack.map((weapon) => (
         <li key={weapon._id}>
           <ul>
             {Object.keys(weapon).map((key, index) => {

@@ -189,7 +189,7 @@ function CreateCard({ characters, createCharacter }) {
             list="background"
             {...register("background")}
           />
-          <datalist id="background" {...register("background")}>
+          <datalist id="background">
             <option value="Acolyte">
               {...BackgroundInfo("Magic Initiate (Cleric)", [
                 "Insight",

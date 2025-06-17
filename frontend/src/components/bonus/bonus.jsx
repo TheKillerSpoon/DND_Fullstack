@@ -1,5 +1,9 @@
-function Bonus({ bonus }) {
-  return <p>Bonus: {bonus}</p>;
+function Bonus({ character, update }) {
+  return (
+    <ul>
+      <li>Bonus: {character.bonus}</li>
+    </ul>
+  );
 }
 
 export default Bonus;
