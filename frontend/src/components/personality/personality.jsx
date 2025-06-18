@@ -1,3 +1,6 @@
+//? component to display and edit character information
+import Input from "../../components/input/input.jsx";
+
 function Personality({ character, update }) {
   return (
     <ul>
@@ -6,6 +9,13 @@ function Personality({ character, update }) {
         return (
           <li key={key}>
             {key}: {character.personality[key]}
+            <Input
+              id={key}
+              character={character}
+              update={update}
+              blur={"object"}
+              layer={"personality"}
+            />
           </li>
         );
       })}

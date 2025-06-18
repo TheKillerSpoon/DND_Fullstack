@@ -1,15 +1,16 @@
+//? component to display and edit character information
+import Input from "../../components/input/input.jsx";
+
 function Inspiration({ character, update }) {
   return (
     <ul>
       <li>
         Inspiration: {character.inspiration ? "True" : "False"}{" "}
-        <input
-          type="checkbox"
+        <Input
           id="inspiration"
-          onClick={(e) => {
-            update(character._id, { [e.target.id]: e.target.checked });
-          }}
-          defaultChecked={character.inspiration}
+          type="checkbox"
+          character={character}
+          update={update}
         />
       </li>
     </ul>

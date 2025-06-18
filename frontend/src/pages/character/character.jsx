@@ -44,7 +44,9 @@ function CharacterPage() {
     console.log("data", data);
   };
 
-  character && console.log(character);
+  useEffect(() => {
+    character && console.log(character);
+  }, [character]);
 
   const setCommonProperties = () => {
     const commonProperties = {
@@ -64,14 +66,14 @@ function CharacterPage() {
         <li>
           <a href="/">Frontpage</a>
         </li>
-        <li>
+        {/* <li>
           <Character {...setCommonProperties()} />
-        </li>
-        <li>
-          <Info {...setCommonProperties()} />
-        </li>
+        </li> */}
         <li>
           <Stats {...setCommonProperties()} />
+        </li>
+        {/* <li>
+          <Info {...setCommonProperties()} />
         </li>
         <li>
           <Inspiration {...setCommonProperties()} />
@@ -93,11 +95,11 @@ function CharacterPage() {
         </li>
         <li>
           <Def {...setCommonProperties()} />
-        </li>
+        </li> */}
         <li>
           <Weapons {...setCommonProperties()} />
         </li>
-        <li>
+        {/* <li>
           <Equipment {...setCommonProperties()} />
         </li>
         <li>
@@ -105,7 +107,7 @@ function CharacterPage() {
         </li>
         <li>
           <Traits {...setCommonProperties()} />
-        </li>
+        </li> */}
       </ul>
     )
   );

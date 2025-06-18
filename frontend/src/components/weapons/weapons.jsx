@@ -1,3 +1,6 @@
+//? component to display and edit character information
+import Input from "../../components/input/input.jsx";
+
 function Weapons({ character, update }) {
   // console.log("Weapons:", weapons);
   // console.log(
@@ -20,14 +23,22 @@ function Weapons({ character, update }) {
         <li key={weapon._id}>
           <ul>
             {Object.keys(weapon).map((key, index) => {
-              if (index !== 0) {
+              if (index > 1) {
                 if (key !== "_id")
                   return (
                     <li key={key}>
                       {key}: {weapon[key]}
+                      <Input
+                        id={key}
+                        type="number"
+                        character={character}
+                        update={update}
+                        blur={"object"}
+                        layer={["attack"]}
+                      />
                     </li>
                   );
-              } else {
+              } else if (index === 0) {
                 var damage = weapon[key];
                 return (
                   <li key={key}>
@@ -35,6 +46,30 @@ function Weapons({ character, update }) {
                     {Object.keys(damage)
                       .map((key) => damage[key])
                       .join("D")}
+                    {Object.keys(damage).map((key) => (
+                      // damage[key]
+                      <Input
+                        key={key}
+                        id={key}
+                        character={character}
+                        update={update}
+                        blur={"object"}
+                        layer={["attack", "damage"]}
+                      />
+                    ))}
+                  </li>
+                );
+              } else {
+                return (
+                  <li key={key}>
+                    {key}: {weapon[key]}
+                    <Input
+                      id={key}
+                      character={character}
+                      update={update}
+                      blur={"object"}
+                      layer={["attack"]}
+                    />
                   </li>
                 );
               }

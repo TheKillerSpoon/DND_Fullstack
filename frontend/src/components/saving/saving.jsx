@@ -1,3 +1,6 @@
+//? component to display and edit character information
+import Input from "../../components/input/input.jsx";
+
 function Saving({ character, update }) {
   return (
     <ul>
@@ -18,21 +21,11 @@ function Saving({ character, update }) {
         </li>
       ))}
       <li>
-        <input
-          type="text"
+        <Input
           id="saves"
-          placeholder="set saving throws"
-          onKeyUp={(e) => {
-            if (e.key === "Enter") e.target.blur();
-          }}
-          onBlur={(e) => {
-            if (!character[e.target.id].includes(e.target.value)) {
-              update(character._id, {
-                [e.target.id]: [...character.saves, e.target.value],
-              });
-              e.target.value = ""; // Clear input after saving
-            }
-          }}
+          character={character}
+          update={update}
+          blur={"array"}
         />
       </li>
     </ul>

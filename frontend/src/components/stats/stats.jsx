@@ -18,7 +18,7 @@ function Stats({ character, update }) {
                 character={character}
                 update={update}
                 blur={"object"}
-                layer={"stats"}
+                layer={["stats"]}
               />
             </li>
           );

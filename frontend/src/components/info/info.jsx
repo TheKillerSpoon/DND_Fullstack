@@ -31,8 +31,8 @@ function Info({ character, update }) {
       <li>
         XP: {character.experience}
         <Input
-          id="class"
-          type="experience"
+          id="experience"
+          type="number"
           character={character}
           update={update}
         />

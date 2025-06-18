@@ -1,16 +1,25 @@
-function Input({ type, id, blur, layer, character, update }) {
+export default function Input({ type, id, blur, layer, character, update }) {
   return (
     <input
       type={!type ? "text" : type}
       id={id}
-      onKeyUp={(e) => {
-        if (e.key === "Enter") e.target.blur();
-      }}
-      {...(!blur
+      {...(type == "checkbox"
+        ? {
+            onClick: (e) => {
+              update(character._id, { [id]: e.target.checked });
+            },
+            defaultChecked: character[id],
+          }
+        : {
+            onKeyDown: (e) => {
+              if (e.key === "Enter") e.target.blur();
+            },
+          })}
+      {...(!blur && type != "checkbox"
         ? {
             onBlur: (e) => {
-              if (character[e.target.id] !== e.target.value) {
-                update(character._id, { [e.target.id]: e.target.value });
+              if (character[id] !== e.target.value) {
+                update(character._id, { [id]: e.target.value });
               }
             },
             placeholder: character[id],
@@ -19,23 +28,32 @@ function Input({ type, id, blur, layer, character, update }) {
         : blur == "object"
         ? {
             onBlur: (e) => {
-              if (character[e.target.id] !== e.target.value && layer) {
+              if (character[id] !== e.target.value && layer[0]) {
                 update(character._id, {
-                  [layer]: {
-                    ...character[layer],
-                    [e.target.id]: e.target.value,
-                  },
+                  // [layer[0]]: {
+                  // else
+                  // {...character[layer[0]][layer[1]],
+                  // [id]: e.target.value,}
+                  // },
                 });
               }
             },
-            placeholder: character[layer][id],
-            defaultValue: character[layer][id],
+            placeholder: character[layer[0]][id],
+            defaultValue: character[layer[0]][id],
           }
         : blur == "array"
-        ? ""
+        ? {
+            onBlur: (e) => {
+              if (!character[id].includes(e.target.value)) {
+                update(character._id, {
+                  [id]: [...character[id], e.target.value],
+                });
+                e.target.value = ""; // Clear input after saving
+              }
+            },
+            placeholder: `Add to ${id}`,
+          }
         : "")}
     />
   );
 }
-
-export default Input;
