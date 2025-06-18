@@ -1,4 +1,13 @@
-export default function Input({ type, id, blur, layer, character, update }) {
+export default function Input({
+  type,
+  id,
+  blur,
+  layer,
+  layer2,
+  character,
+  update,
+  weaponId,
+}) {
   return (
     <input
       type={!type ? "text" : type}
@@ -28,18 +37,17 @@ export default function Input({ type, id, blur, layer, character, update }) {
         : blur == "object"
         ? {
             onBlur: (e) => {
-              if (character[id] !== e.target.value && layer[0]) {
+              if (character[id] !== e.target.value && layer) {
                 update(character._id, {
-                  // [layer[0]]: {
-                  // else
-                  // {...character[layer[0]][layer[1]],
-                  // [id]: e.target.value,}
-                  // },
+                  [layer]: {
+                    ...character[layer],
+                    [id]: e.target.value,
+                  },
                 });
               }
             },
-            placeholder: character[layer[0]][id],
-            defaultValue: character[layer[0]][id],
+            placeholder: character[layer][id],
+            defaultValue: character[layer][id],
           }
         : blur == "array"
         ? {
@@ -52,6 +60,41 @@ export default function Input({ type, id, blur, layer, character, update }) {
               }
             },
             placeholder: `Add to ${id}`,
+          }
+        : blur == "attack"
+        ? {
+            onBlur: (e) => {
+              if (character[blur][layer][id] !== e.target.value) {
+                update(character._id, weaponId, { [id]: e.target.value });
+              }
+            },
+            placeholder: character[blur][layer][id],
+            defaultValue: character[blur][layer][id],
+          }
+        : blur == "attackDamage"
+        ? {
+            onBlur: (e) => {
+              if (character.attack[layer][layer2][id] !== e.target.value) {
+                update(character._id, weaponId, {
+                  [layer2]: {
+                    ...character.attack[layer][layer2],
+                    [id]: e.target.value,
+                  },
+                });
+              }
+            },
+            placeholder: character.attack[layer][layer2][id],
+            defaultValue: character.attack[layer][layer2][id],
+          }
+        : blur == "weapon"
+        ? {
+            onBlur: (e) => {
+              update(character._id, {
+                attack: [...character.attack, { [id]: e.target.value }],
+              });
+              e.target.value = ""; // Clear input after saving
+            },
+            placeholder: `Add ${blur} (name)`,
           }
         : "")}
     />

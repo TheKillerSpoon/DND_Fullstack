@@ -1,7 +1,7 @@
 //? component to display and edit character information
 import Input from "../../components/input/input.jsx";
 
-function Weapons({ character, update }) {
+function Weapons({ character, weaponUpdate, weaponDelete, update }) {
   // console.log("Weapons:", weapons);
   // console.log(
   //   weapons.map((weapon) =>
@@ -19,10 +19,11 @@ function Weapons({ character, update }) {
   return (
     <ul>
       <li>Weapons:</li>
-      {character.attack.map((weapon) => (
+      {character.attack.map((weapon, windex) => (
         <li key={weapon._id}>
           <ul>
             {Object.keys(weapon).map((key, index) => {
+              // console.log("key:", weapon[key], "index:", index);
               if (index > 1) {
                 if (key !== "_id")
                   return (
@@ -32,9 +33,10 @@ function Weapons({ character, update }) {
                         id={key}
                         type="number"
                         character={character}
-                        update={update}
-                        blur={"object"}
-                        layer={["attack"]}
+                        update={weaponUpdate}
+                        blur="attack"
+                        weaponId={weapon._id}
+                        layer={windex}
                       />
                     </li>
                   );
@@ -42,20 +44,24 @@ function Weapons({ character, update }) {
                 var damage = weapon[key];
                 return (
                   <li key={key}>
-                    Damage:{" "}
+                    {key}:{" "}
                     {Object.keys(damage)
                       .map((key) => damage[key])
                       .join("D")}
                     {Object.keys(damage).map((key) => (
-                      // damage[key]
-                      <Input
-                        key={key}
-                        id={key}
-                        character={character}
-                        update={update}
-                        blur={"object"}
-                        layer={["attack", "damage"]}
-                      />
+                      <p key={key}>
+                        {key}
+                        <Input
+                          id={key}
+                          type="number"
+                          character={character}
+                          update={weaponUpdate}
+                          blur="attackDamage"
+                          weaponId={weapon._id}
+                          layer={windex}
+                          layer2="damage"
+                        />
+                      </p>
                     ))}
                   </li>
                 );
@@ -63,12 +69,25 @@ function Weapons({ character, update }) {
                 return (
                   <li key={key}>
                     {key}: {weapon[key]}
+                    <button
+                      id={key}
+                      onClick={(e) =>
+                        weaponDelete(character._id, weapon._id, {
+                          attack: character.attack.filter(
+                            (x) => x._id !== weapon._id
+                          ),
+                        })
+                      }
+                    >
+                      delete
+                    </button>
                     <Input
                       id={key}
                       character={character}
-                      update={update}
-                      blur={"object"}
-                      layer={["attack"]}
+                      update={weaponUpdate}
+                      blur="attack"
+                      weaponId={weapon._id}
+                      layer={windex}
                     />
                   </li>
                 );
@@ -77,6 +96,14 @@ function Weapons({ character, update }) {
           </ul>
         </li>
       ))}
+      <li>
+        <Input
+          id="attackName"
+          character={character}
+          update={update}
+          blur="weapon"
+        />
+      </li>
     </ul>
   );
 }

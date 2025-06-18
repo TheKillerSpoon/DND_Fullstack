@@ -143,6 +143,7 @@ export const useFetch = () => {
       if (!response.ok) {
         throw new Error("Failed to create weapon");
       }
+      getCharacterById(id); // Refresh the character data after updating
     } catch (error) {
       setError(error.message);
     } finally {
@@ -164,6 +165,7 @@ export const useFetch = () => {
       if (!response.ok) {
         throw new Error("Failed to update weapon");
       }
+      getCharacterById(id); // Refresh the character data after updating
     } catch (error) {
       setError(error.message);
     } finally {
@@ -181,6 +183,7 @@ export const useFetch = () => {
       if (!response.ok) {
         throw new Error("Failed to delete weapon");
       }
+      getCharacterById(id); // Refresh the character data after updating
     } catch (error) {
       setError(error.message);
     } finally {

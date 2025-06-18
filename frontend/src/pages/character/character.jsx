@@ -28,7 +28,13 @@ import { useFetch } from "../../hooks/useFetch.jsx";
 
 //? Character Page -----------------------------------------------
 function CharacterPage() {
-  const { getCharacterById, updateCharacter, character } = useFetch();
+  const {
+    getCharacterById,
+    updateCharacter,
+    deleteWeapon,
+    updateWeapon,
+    character,
+  } = useFetch();
   useEffect(() => {
     const CharacterID = localStorage.getItem("character");
     if (CharacterID) {
@@ -44,15 +50,25 @@ function CharacterPage() {
     console.log("data", data);
   };
 
+  const test1 = (id, aid, data) => {
+    console.log("id", id);
+    console.log("aid", aid);
+    console.log("data", data);
+  };
+
   useEffect(() => {
     character && console.log(character);
   }, [character]);
 
-  const setCommonProperties = () => {
+  const setCommonProperties = (weapon) => {
     const commonProperties = {
       character: character,
       update: updateCharacter,
+      weaponUpdate: updateWeapon,
+      weaponDelete: deleteWeapon,
       // update: test,
+      // weaponUpdate: test1,
+      // weaponDelete: test,
     };
     return commonProperties;
   };
@@ -66,13 +82,13 @@ function CharacterPage() {
         <li>
           <a href="/">Frontpage</a>
         </li>
-        {/* <li>
+        <li>
           <Character {...setCommonProperties()} />
-        </li> */}
+        </li>
         <li>
           <Stats {...setCommonProperties()} />
         </li>
-        {/* <li>
+        <li>
           <Info {...setCommonProperties()} />
         </li>
         <li>
@@ -95,11 +111,11 @@ function CharacterPage() {
         </li>
         <li>
           <Def {...setCommonProperties()} />
-        </li> */}
+        </li>
         <li>
           <Weapons {...setCommonProperties()} />
         </li>
-        {/* <li>
+        <li>
           <Equipment {...setCommonProperties()} />
         </li>
         <li>
@@ -107,7 +123,7 @@ function CharacterPage() {
         </li>
         <li>
           <Traits {...setCommonProperties()} />
-        </li> */}
+        </li>
       </ul>
     )
   );

@@ -217,14 +217,27 @@ characterRoute.delete("/weapon/:id/:aid", async (req, res) => {
       });
     }
 
-    const weapon = await Character.findOneAndDelete({
-      _id: req.params.id,
-      "attack._id": req.params.aid,
-    });
+    const result = await Character.findByIdAndUpdate(
+      req.params.id,
+      { $pull: { attack: { _id: req.params.aid } } },
+      { new: true }
+    );
+
+    if (!result) {
+      return res.status(404).send({
+        status: "error",
+        message: "Character not found",
+      });
+    }
+
+    // const weapon = await Character.findOneAndDelete({
+    //   _id: req.params.id,
+    //   "attack._id": req.params.aid,
+    // });
 
     res.status(200).send({
       status: "ok",
-      message: "Weapon deleted successfully",
+      message: result,
     });
   } catch (error) {
     console.error("Server-error", error);
