@@ -65,7 +65,16 @@ export default function Input({
         ? {
             onBlur: (e) => {
               if (character[blur][layer][id] !== e.target.value) {
-                update(character._id, weaponId, { [id]: e.target.value });
+                update(
+                  character._id,
+                  weaponId,
+                  Object.keys(character[blur][layer]).map((key, index) => {
+                    if (key === id) {
+                      character[blur][layer][key] = e.target.value;
+                      return { attack: character[blur][layer] };
+                    } else return;
+                  })
+                );
               }
             },
             placeholder: character[blur][layer][id],
