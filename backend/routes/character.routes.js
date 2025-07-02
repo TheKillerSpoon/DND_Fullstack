@@ -1,10 +1,29 @@
 import express from "express";
 import { getCharacter } from "../handlers/character.handler.js";
+import { getClass } from "../handlers/class.handler.js";
 import Character from "../models/character.model.js";
 
 const characterRoute = express.Router();
 
 const test = ["class", "race", "background", "alignment", "name"];
+
+//! validation -----------------------------------------------------------------------
+
+const validateCharacter = async (body) => {
+  // fetching data
+  const classes = await getClass();
+
+  // check if data is valid
+  const classExists = classes.some((cls) => cls.className == body.class);
+
+  //error handling
+  if (!classExists) {
+    return res.status(400).send({
+      status: "error",
+      message: "Invalid class name",
+    });
+  }
+};
 
 //! universal routes -----------------------------------------------------------------
 
@@ -61,6 +80,8 @@ characterRoute.post("/character", async (req, res) => {
       if (body[key] == "" || !body[key]) body[key] = undefined;
     });
 
+    validateCharacter(body);
+
     var character = new Character(req.body);
     await character.save();
     res.status(201).send(character);
@@ -92,6 +113,9 @@ characterRoute.put("/character/:id", async (req, res) => {
         message: "Character ID is required",
       });
     }
+
+    validateCharacter(req.body);
+
     const character = await Character.findByIdAndUpdate(
       req.params.id,
       req.body,

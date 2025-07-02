@@ -54,6 +54,7 @@ const classSchema = new Schema(
       ability: {
         type: [String],
         enum: { values: stats, message: "Invalid ability" },
+        lowercase: true,
         default: ["strength"],
       },
     },
@@ -65,17 +66,10 @@ const classSchema = new Schema(
     },
     //* Saving Throw Proficiencies ------------------------------------------------------
     savingThrowProficiencies: {
-      amount: {
-        type: Number,
-        min: [1, "Amount must be at least 1"],
-        max: [3, "Amount must be at most 3"],
-        default: 2,
-      },
-      throw: {
-        type: [String],
-        enum: { values: stats, message: "Invalid saving throw" },
-        default: ["strength"],
-      },
+      type: [String],
+      enum: { values: stats, message: "Invalid saving throw" },
+      lowercase: true,
+      default: ["strength"],
     },
     //* Skill Proficiencies -------------------------------------------------------------
     skillProficiencies: {
@@ -88,7 +82,7 @@ const classSchema = new Schema(
       skill: {
         type: [String],
         enum: { values: skills, message: "Invalid skill" },
-        default: ["strength"],
+        default: ["Athletics"],
       },
     },
     //* Weapon Proficiencies ------------------------------------------------------------
@@ -128,6 +122,21 @@ const classSchema = new Schema(
         },
         default: [],
       },
+    },
+    //* Armor Training ------------------------------------------------------------------
+    armorTraining: {
+      type: [String],
+      enum: {
+        values: ["light", "medium", "heavy", "shield"],
+        message: "Invalid armor type",
+      },
+    },
+    //* Starting Equipment --------------------------------------------------------------
+    startingEquipment: {
+      type: [[String]],
+      minlength: [1, "At least one starting equipment is required"],
+      maxlength: [10, "Too many starting equipment items"],
+      default: [[]],
     },
   },
 

@@ -52,24 +52,6 @@ const characterSchema = new Schema(
     //* class -------------------------------------------------------------------------------
     class: {
       type: String,
-      enum: {
-        values: [
-          "barbarian",
-          "bard",
-          "cleric",
-          "druid",
-          "fighter",
-          "monk",
-          "paladin",
-          "ranger",
-          "rogue",
-          "sorcerer",
-          "warlock",
-          "wizard",
-          "artificer",
-        ],
-        message: "Invalid class",
-      },
       lowercase: true,
       default: "barbarian",
     },
