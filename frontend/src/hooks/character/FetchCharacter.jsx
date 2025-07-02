@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { get } from "react-hook-form";
 
 //! This hook provides functions to interact with a REST API for managing characters and their weapons.
 
@@ -19,9 +18,9 @@ const API_URL = (() => {
   return url;
 })();
 
-//! useFetch ----------------------------------------------------
+//! fetchCharacter ----------------------------------------------------
 
-export const useFetch = () => {
+export const fetchCharacter = () => {
   const [characters, setCharacters] = useState([]);
   const [character, setCharacter] = useState(null);
   const [Error, setError] = useState(null);

@@ -2,7 +2,7 @@
 import styles from "./frontpage.module.css";
 
 //? Hooks ------------------------------------------------------
-import { useFetch } from "../../hooks/useFetch.jsx";
+import { fetchCharacter } from "../../hooks/character/FetchCharacter.jsx";
 
 //? React ------------------------------------------------------
 import { useEffect } from "react";
@@ -14,7 +14,7 @@ import CreateCard from "../../components/createCard/createCard.jsx";
 //? Frontpage --------------------------------------------------
 function Frontpage() {
   const { getAllCharacters, createCharacter, deleteCharacter, characters } =
-    useFetch();
+    fetchCharacter();
 
   useEffect(() => {
     getAllCharacters();

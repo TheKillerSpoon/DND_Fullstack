@@ -24,7 +24,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 //? Hooks ------------------------------------------------------
-import { useFetch } from "../../hooks/useFetch.jsx";
+import { fetchCharacter } from "../../hooks/character/FetchCharacter.jsx";
 
 //? Character Page -----------------------------------------------
 function CharacterPage() {
@@ -34,7 +34,7 @@ function CharacterPage() {
     deleteWeapon,
     updateWeapon,
     character,
-  } = useFetch();
+  } = fetchCharacter();
   useEffect(() => {
     const CharacterID = localStorage.getItem("character");
     if (CharacterID) {

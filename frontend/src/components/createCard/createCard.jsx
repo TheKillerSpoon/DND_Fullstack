@@ -3,10 +3,21 @@ import styles from "./createCard.module.css";
 
 //? React ------------------------------------------------------
 import { useForm } from "react-hook-form";
+import { useEffect } from "react";
+
+//? Hooks ------------------------------------------------------
+import { fetchClass } from "../../hooks/class/FetchClass.jsx";
 
 //? CreateCard -------------------------------------------------
 function CreateCard({ characters, createCharacter }) {
+  const { getAllClasses, classes } = fetchClass();
   const { register, handleSubmit, setValue } = useForm();
+
+  useEffect(() => {
+    getAllClasses();
+  }, []);
+
+  console.log("classes", classes);
 
   const classInfo = (ability, hitDie, saves) => {
     return `Ability: ${ability}. Hit die: D${hitDie}. Saves: ${saves.join(
@@ -51,7 +62,18 @@ function CreateCard({ characters, createCharacter }) {
             list="class"
             {...register("class")}
           />
+
           <datalist id="class">
+            {classes.map((classItem) => (
+              <option value={classItem.className}>
+                Ability: {classItem.primaryAbility.ability}. Hit die: D
+                {classItem.hitPointDie}. Saves:{" "}
+                {classItem.savingThrowProficiencies.join(" & ")}.
+              </option>
+            ))}
+          </datalist>
+
+          {/* <datalist id="class">
             <option value="Barbarian">
               {...classInfo("Strength", 12, ["Strength", "Constitution"])}
             </option>
@@ -100,7 +122,7 @@ function CreateCard({ characters, createCharacter }) {
                 "Intelligence",
               ])}
             </option>
-          </datalist>
+          </datalist> */}
 
           <label htmlFor="race">Choose a race</label>
           <input
