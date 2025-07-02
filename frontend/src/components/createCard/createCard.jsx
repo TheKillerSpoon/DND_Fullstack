@@ -66,8 +66,13 @@ function CreateCard({ characters, createCharacter }) {
           <datalist id="class">
             {classes.map((classItem) => (
               <option value={classItem.className}>
-                Ability: {classItem.primaryAbility.ability}. Hit die: D
-                {classItem.hitPointDie}. Saves:{" "}
+                Ability:{" "}
+                {classItem.primaryAbility.ability.length > 1
+                  ? classItem.primaryAbility.amount > 1
+                    ? classItem.primaryAbility.ability.join(" & ")
+                    : classItem.primaryAbility.ability.join(" or ")
+                  : classItem.primaryAbility.ability}
+                . Hit die: D{classItem.hitPointDie}. Saves:{" "}
                 {classItem.savingThrowProficiencies.join(" & ")}.
               </option>
             ))}

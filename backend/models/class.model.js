@@ -48,7 +48,7 @@ const classSchema = new Schema(
       amount: {
         type: Number,
         min: [1, "Amount must be at least 1"],
-        max: [5, "Amount must be at most 5"],
+        max: [2, "Amount must be at most 5"],
         default: 1,
       },
       ability: {
