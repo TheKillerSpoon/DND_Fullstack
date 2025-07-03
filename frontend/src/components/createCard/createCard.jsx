@@ -17,13 +17,7 @@ function CreateCard({ characters, createCharacter }) {
     getAllClasses();
   }, []);
 
-  console.log("classes", classes);
-
-  const classInfo = (ability, hitDie, saves) => {
-    return `Ability: ${ability}. Hit die: D${hitDie}. Saves: ${saves.join(
-      " & "
-    )}.`;
-  };
+  classes.sort((a, b) => a.className.localeCompare(b.className));
 
   const raceInfo = (Traits) => {
     return `${Traits.join(", ")}.`;
@@ -65,7 +59,7 @@ function CreateCard({ characters, createCharacter }) {
 
           <datalist id="class">
             {classes.map((classItem) => (
-              <option value={classItem.className}>
+              <option key={classItem._id} value={classItem.className}>
                 Ability:{" "}
                 {classItem.primaryAbility.ability.length > 1
                   ? classItem.primaryAbility.amount > 1
@@ -77,57 +71,6 @@ function CreateCard({ characters, createCharacter }) {
               </option>
             ))}
           </datalist>
-
-          {/* <datalist id="class">
-            <option value="Barbarian">
-              {...classInfo("Strength", 12, ["Strength", "Constitution"])}
-            </option>
-            <option value="Bard">
-              {...classInfo("Charisma", 8, ["Dexterity", "Charisma"])}
-            </option>
-            <option value="Cleric">
-              {...classInfo("Wisdom", 8, ["Wisdom", "Charisma"])}
-            </option>
-            <option value="Druid">
-              {...classInfo("Wisdom", 8, ["Intelligence", "Wisdom"])}
-            </option>
-            <option value="Fighter">
-              {...classInfo("Strength or Dexterity", 10, [
-                "Strength",
-                "Constitution",
-              ])}
-            </option>
-            <option value="Monk">
-              {...classInfo("Dexterity & Wisdom", 8, ["Strength", "Dexterity"])}
-            </option>
-            <option value="Paladin">
-              {...classInfo("Strength & Charisma", 10, ["Wisdom", "Charisma"])}
-            </option>
-            <option value="Ranger">
-              {...classInfo("Dexterity & Wisdom", 10, [
-                "Strength",
-                "Dexterity",
-              ])}
-            </option>
-            <option value="Rogue">
-              {...classInfo("Dexterity", 8, ["Dexterity", "Intelligence"])}
-            </option>
-            <option value="Sorcerer">
-              {...classInfo("Charisma", 6, ["Constitution", "Charisma"])}
-            </option>
-            <option value="Warlock">
-              {...classInfo("Charisma", 8, ["Wisdom", "Charisma"])}
-            </option>
-            <option value="Wizard">
-              {...classInfo("Intelligence", 6, ["Intelligence", "Wisdom"])}
-            </option>
-            <option value="Artificer">
-              {...classInfo("Intelligence", 8, [
-                "Constitution",
-                "Intelligence",
-              ])}
-            </option>
-          </datalist> */}
 
           <label htmlFor="race">Choose a race</label>
           <input
