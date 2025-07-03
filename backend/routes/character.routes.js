@@ -1,27 +1,41 @@
 import express from "express";
 import { getCharacter } from "../handlers/character.handler.js";
 import { getClass } from "../handlers/class.handler.js";
+import { getSpecies } from "../handlers/species.handler.js";
 import Character from "../models/character.model.js";
 
 const characterRoute = express.Router();
 
+//! test variables ---------------------------------------------------------------------
 const test = ["class", "race", "background", "alignment", "name"];
 
 //! validation -----------------------------------------------------------------------
-
+let validate = true;
 const validateCharacter = async (body) => {
+  validate = true;
+  let classesExists = true;
+  let speciesExists = true;
+
   // fetching data
-  const classes = await getClass();
 
-  // check if data is valid
-  const classExists = classes.some((cls) => cls.className == body.class);
+  const [classes, species] = await Promise.all([getClass(), getSpecies()]);
 
-  //error handling
-  if (!classExists) {
-    return res.status(400).send({
-      status: "error",
-      message: "Invalid class name",
-    });
+  // validation checks
+  if (body.class) {
+    classesExists = classes.some(
+      (cls) => cls.className.toLowerCase() === body.class.toLowerCase()
+    );
+  }
+  if (body.race) {
+    speciesExists = species.some(
+      (spec) => spec.speciesName.toLowerCase() === body.race.toLowerCase()
+    );
+  }
+
+  // returning validation result
+  if (!classesExists || !speciesExists) {
+    console.log("Validation failed");
+    validate = false;
   }
 };
 
@@ -80,7 +94,7 @@ characterRoute.post("/character", async (req, res) => {
       if (body[key] == "" || !body[key]) body[key] = undefined;
     });
 
-    validateCharacter(body);
+    await validateCharacter(req.body);
 
     var character = new Character(req.body);
     await character.save();
@@ -114,7 +128,14 @@ characterRoute.put("/character/:id", async (req, res) => {
       });
     }
 
-    validateCharacter(req.body);
+    await validateCharacter(req.body);
+
+    if (!validate) {
+      return res.status(400).send({
+        status: "error",
+        message: "Invalid class provided",
+      });
+    }
 
     const character = await Character.findByIdAndUpdate(
       req.params.id,

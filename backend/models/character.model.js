@@ -65,21 +65,6 @@ const characterSchema = new Schema(
     //* race --------------------------------------------------------------------------------
     race: {
       type: String,
-      enum: {
-        values: [
-          "aasimar",
-          "dragonborn",
-          "dwarf",
-          "elf",
-          "gnome",
-          "goliath",
-          "halfling",
-          "human",
-          "orc",
-          "tiefling",
-        ],
-        message: "Invalid race",
-      },
       lowercase: true,
       default: "human",
     },
