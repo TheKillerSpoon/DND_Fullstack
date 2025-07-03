@@ -1,22 +1,22 @@
 import express from "express";
-import { getClass } from "../handlers/class.handler.js";
-import Class from "../models/class.model.js";
+import { getSpecies } from "../handlers/species.handler.js";
+import Species from "../models/species.model.js";
 
-const classRoute = express.Router();
+const speciesRoute = express.Router();
 
 //! universal routes -----------------------------------------------------------------
 
-// get all classes
-classRoute.get("/classes", async (req, res) => {
+// get all speciess
+speciesRoute.get("/speciess", async (req, res) => {
   try {
-    const result = await getClass();
+    const result = await getSpecies();
     console.log(
-      "Classes found:",
-      result.map((cls) => cls.className)
+      "Speciess found:",
+      result.map((cls) => cls.speciesName)
     );
     return res.status(200).send({
       status: "ok",
-      message: "Classes found!",
+      message: "Speciess found!",
       data: result,
     });
   } catch (error) {
@@ -29,11 +29,11 @@ classRoute.get("/classes", async (req, res) => {
   }
 });
 
-// create a new class
-classRoute.post("/class", async (req, res) => {
+// create a new species
+speciesRoute.post("/species", async (req, res) => {
   try {
     let body = req.body;
-    const requiredFields = ["className"];
+    const requiredFields = ["speciesName"];
 
     // Check if all required fields are present
     for (const field of requiredFields) {
@@ -45,11 +45,11 @@ classRoute.post("/class", async (req, res) => {
       }
     }
 
-    const newClass = await Class.create(body);
+    const newSpecies = await Species.create(body);
     return res.status(201).send({
       status: "ok",
-      message: "Class created successfully!",
-      data: newClass,
+      message: "Species created successfully!",
+      data: newSpecies,
     });
   } catch (error) {
     console.error("Something went wrong:", error);
@@ -61,35 +61,35 @@ classRoute.post("/class", async (req, res) => {
   }
 });
 
-// update a class by id
-classRoute.put("/class/:id", async (req, res) => {
+// update a species by id
+speciesRoute.put("/species/:id", async (req, res) => {
   try {
-    const classId = req.params.id;
+    const speciesId = req.params.id;
     const body = req.body;
 
-    if (!classId) {
+    if (!speciesId) {
       return res.status(400).send({
         status: "error",
-        message: "Class ID is required",
+        message: "Species ID is required",
       });
     }
 
-    const updatedClass = await Class.findByIdAndUpdate(classId, body, {
+    const updatedSpecies = await Species.findByIdAndUpdate(speciesId, body, {
       new: true,
       runValidators: true,
     });
 
-    if (!updatedClass) {
+    if (!updatedSpecies) {
       return res.status(404).send({
         status: "error",
-        message: "Class not found",
+        message: "Species not found",
       });
     }
 
     return res.status(200).send({
       status: "ok",
-      message: "Class updated successfully!",
-      data: updatedClass,
+      message: "Species updated successfully!",
+      data: updatedSpecies,
     });
   } catch (error) {
     console.error("Server error", error);
@@ -101,30 +101,30 @@ classRoute.put("/class/:id", async (req, res) => {
   }
 });
 
-// delete a class by id
-classRoute.delete("/class/:id", async (req, res) => {
+// delete a species by id
+speciesRoute.delete("/species/:id", async (req, res) => {
   try {
-    const classId = req.params.id;
+    const speciesId = req.params.id;
 
-    if (!classId) {
+    if (!speciesId) {
       return res.status(400).send({
         status: "error",
-        message: "Class ID is required",
+        message: "Species ID is required",
       });
     }
 
-    const deletedClass = await Class.findByIdAndDelete(classId);
+    const deletedSpecies = await Species.findByIdAndDelete(speciesId);
 
-    if (!deletedClass) {
+    if (!deletedSpecies) {
       return res.status(404).send({
         status: "error",
-        message: "Class not found",
+        message: "Species not found",
       });
     }
 
     return res.status(200).send({
       status: "ok",
-      message: "Class deleted successfully!",
+      message: "Species deleted successfully!",
     });
   } catch (error) {
     console.error("Server error", error);
@@ -136,4 +136,4 @@ classRoute.delete("/class/:id", async (req, res) => {
   }
 });
 
-export default classRoute;
+export default speciesRoute;

@@ -7,6 +7,7 @@ await dbConnect(); // Opretter forbindelse til databasen
 
 import characterRoute from "./routes/character.routes.js";
 import classRoute from "./routes/class.routes.js";
+import speciesRoute from "./routes/species.routes.js";
 
 const expressServer = express();
 
@@ -18,6 +19,7 @@ expressServer.use(express.json());
 
 expressServer.use(characterRoute);
 expressServer.use(classRoute);
+expressServer.use(speciesRoute);
 
 expressServer.listen(3042, () => {
   console.log("Serveren kører på http://localhost:3042");
