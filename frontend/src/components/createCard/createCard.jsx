@@ -7,21 +7,21 @@ import { useEffect } from "react";
 
 //? Hooks ------------------------------------------------------
 import { fetchClass } from "../../hooks/class/FetchClass.jsx";
+import { fetchSpecies } from "../../hooks/species/FetchSpecies.jsx";
 
 //? CreateCard -------------------------------------------------
 function CreateCard({ characters, createCharacter }) {
   const { getAllClasses, classes } = fetchClass();
+  const { getAllSpeciess, species } = fetchSpecies();
   const { register, handleSubmit, setValue } = useForm();
 
   useEffect(() => {
     getAllClasses();
+    getAllSpeciess();
   }, []);
 
   classes.sort((a, b) => a.className.localeCompare(b.className));
-
-  const raceInfo = (Traits) => {
-    return `${Traits.join(", ")}.`;
-  };
+  species.sort((a, b) => a.speciesName.localeCompare(b.speciesName));
 
   const BackgroundInfo = (Feature, Proficiencies) => {
     return `Feat: ${Feature}. Proficiencies: ${Proficiencies.join(", ")}.`;
@@ -80,76 +80,11 @@ function CreateCard({ characters, createCharacter }) {
             {...register("race")}
           />
           <datalist id="race">
-            <option value="Aasimar">
-              {...raceInfo([
-                "Celestial Resistance",
-                "Darkvision",
-                "Healing Hands",
-                "Light Bearer",
-                "Celestial Revelation",
-              ])}
-            </option>
-            <option value="Dragonborn">
-              {...raceInfo([
-                "Dragon Ancestry",
-                "Breath Weapon",
-                "Damage Resistance",
-                "Darkvision",
-                "Draconic Flight",
-              ])}
-            </option>
-            <option value="Dwarf">
-              {...raceInfo([
-                "Darkvision",
-                "Dwarven Resilience",
-                "Dwarven Toughness",
-                "Stonecunning",
-              ])}
-            </option>
-            <option value="Elf">
-              {...raceInfo([
-                "Darkvision",
-                "Elven Lineage",
-                "Fey Ancestry",
-                "Keen Senses",
-                "Trance",
-              ])}
-            </option>
-            <option value="Gnome">
-              {...raceInfo([
-                "Darkvision",
-                "Gnomish Cunning",
-                "Gnomish lineage",
-              ])}
-            </option>
-            <option value="Goliath">
-              {...raceInfo(["Giant Ancestry", "Large Form", "Powerful Build"])}
-            </option>
-            <option value="Halfling">
-              {...raceInfo([
-                "Brave",
-                "Halfling Nimbleness",
-                "Luck",
-                "Naturally Stealthy",
-              ])}
-            </option>
-            <option value="Human">
-              {...raceInfo(["Resourceful", "Skillful", "Verdatile"])}
-            </option>
-            <option value="Orc">
-              {...raceInfo([
-                "Adrenaline Rush",
-                "Darkvision",
-                "Relentless Endurance",
-              ])}
-            </option>
-            <option value="Tiefling">
-              {...raceInfo([
-                "Darkvision",
-                "Fiendish Legacy",
-                "Otherworldly Presence",
-              ])}
-            </option>
+            {species.map((speciesItem) => (
+              <option key={speciesItem._id} value={speciesItem.speciesName}>
+                {speciesItem.traits.join(", ")}.
+              </option>
+            ))}
           </datalist>
 
           <label htmlFor="background">Choose a background</label>

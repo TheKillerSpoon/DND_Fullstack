@@ -10,14 +10,13 @@ const characterRoute = express.Router();
 const test = ["class", "race", "background", "alignment", "name"];
 
 //! validation -----------------------------------------------------------------------
+// This variable is used to control the validation state
 let validate = true;
 const validateCharacter = async (body) => {
-  validate = true;
-  let classesExists = true;
-  let speciesExists = true;
+  // These variables will be used to check if the class and species exist
+  let [classesExists, speciesExists] = [true, true];
 
   // fetching data
-
   const [classes, species] = await Promise.all([getClass(), getSpecies()]);
 
   // validation checks
@@ -32,11 +31,8 @@ const validateCharacter = async (body) => {
     );
   }
 
-  // returning validation result
-  if (!classesExists || !speciesExists) {
-    console.log("Validation failed");
-    validate = false;
-  }
+  // if any of the checks fail, set validate to false
+  validate = [classesExists, speciesExists].every((x) => x === true);
 };
 
 //! universal routes -----------------------------------------------------------------
