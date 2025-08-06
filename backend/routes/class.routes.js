@@ -12,7 +12,7 @@ classRoute.get("/classes", async (req, res) => {
     const result = await getClass();
     console.log(
       "Classes found:",
-      result.map((cls) => cls.className)
+      result.map((x) => x.name)
     );
     return res.status(200).send({
       status: "ok",
@@ -33,7 +33,7 @@ classRoute.get("/classes", async (req, res) => {
 classRoute.post("/class", async (req, res) => {
   try {
     let body = req.body;
-    const requiredFields = ["className"];
+    const requiredFields = ["name"];
 
     // Check if all required fields are present
     for (const field of requiredFields) {

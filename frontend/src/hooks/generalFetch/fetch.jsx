@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 //! This hook provides functions to interact with a REST API for managing characters and their weapons.
 
@@ -18,22 +18,22 @@ const API_URL = (() => {
   return url;
 })();
 
-//! fetchSpecies ----------------------------------------------------
-export const fetchSpecies = () => {
-  const [species, setSpecies] = useState([]);
+//! Custom fetch ----------------------------------------------------
+export const customFetch = (FetchLocation) => {
+  const [data, setData] = useState([]);
   const [Error, setError] = useState(null);
   const [IsLoading, setIsLoading] = useState(false);
 
-  // Get all characters
-  const getAllSpeciess = async () => {
+  // Get all
+  const getAll = async () => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/speciess`);
+      const response = await fetch(`${API_URL}/${FetchLocation}s`);
       if (!response.ok) {
-        throw new Error("Failed to fetch characters");
+        throw new Error("Failed to fetch data");
       }
       const data = await response.json();
-      setSpecies(data.data);
+      setData(data.data.sort((a, b) => a.name.localeCompare(b.name)));
     } catch (error) {
       setError(error.message);
     } finally {
@@ -41,12 +41,15 @@ export const fetchSpecies = () => {
     }
   };
 
+  useEffect(() => {
+    getAll();
+  }, []);
+
   return {
+    //* data
+    data,
     //* misc
-    species,
     Error,
     IsLoading,
-    //* class
-    getAllSpeciess,
   };
 };

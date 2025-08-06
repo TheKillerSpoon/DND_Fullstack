@@ -22,7 +22,7 @@ function Frontpage() {
   }, []);
 
   return (
-    <>
+    <section className={styles.frontpageContainer}>
       <h1>FrontPage</h1>
       <section className={styles.frontpage}>
         <CharacterCard
@@ -31,7 +31,7 @@ function Frontpage() {
         />
         <CreateCard characters={characters} createCharacter={createCharacter} />
       </section>
-    </>
+    </section>
   );
 }
 

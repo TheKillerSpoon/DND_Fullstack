@@ -6,7 +6,7 @@ function Character({ character, update }) {
     <ul>
       <li>Character Name: {character.name}</li>
       <li>
-        <Input id="name" character={character} update={update} />
+        <Input id="name" character={character} updateCharacter={update} />
       </li>
     </ul>
   );

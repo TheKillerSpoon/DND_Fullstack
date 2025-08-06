@@ -3,12 +3,12 @@ import mongoose, { Schema } from "mongoose";
 // validering
 mongoose.set("runValidators", true);
 
-const speciesSchema = new Schema(
+const raceSchema = new Schema(
   {
-    //* Species name ----------------------------------------------------------------------
-    speciesName: { type: String, required: [true, "Name is required"] },
-    //* Sub species names ------------------------------------------------------------------
-    subSpecies: { type: [String] },
+    //* Race name ----------------------------------------------------------------------
+    name: { type: String, required: [true, "Name is required"] },
+    //* Sub race names ------------------------------------------------------------------
+    subRace: { type: [String] },
     //* Creature Type ---------------------------------------------------------------------
     creatureType: {
       type: String,
@@ -27,4 +27,4 @@ const speciesSchema = new Schema(
   { timestamps: true }
 );
 
-export default mongoose.model("species", speciesSchema);
+export default mongoose.model("race", raceSchema);

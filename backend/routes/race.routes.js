@@ -1,22 +1,22 @@
 import express from "express";
-import { getSpecies } from "../handlers/species.handler.js";
-import Species from "../models/species.model.js";
+import { getRace } from "../handlers/race.handler.js";
+import Race from "../models/race.model.js";
 
-const speciesRoute = express.Router();
+const raceRoute = express.Router();
 
 //! universal routes -----------------------------------------------------------------
 
-// get all speciess
-speciesRoute.get("/speciess", async (req, res) => {
+// get all races
+raceRoute.get("/races", async (req, res) => {
   try {
-    const result = await getSpecies();
+    const result = await getRace();
     console.log(
-      "Speciess found:",
-      result.map((cls) => cls.speciesName)
+      "Races found:",
+      result.map((x) => x.name)
     );
     return res.status(200).send({
       status: "ok",
-      message: "Speciess found!",
+      message: "Races found!",
       data: result,
     });
   } catch (error) {
@@ -29,11 +29,11 @@ speciesRoute.get("/speciess", async (req, res) => {
   }
 });
 
-// create a new species
-speciesRoute.post("/species", async (req, res) => {
+// create a new race
+raceRoute.post("/race", async (req, res) => {
   try {
     let body = req.body;
-    const requiredFields = ["speciesName"];
+    const requiredFields = ["name"];
 
     // Check if all required fields are present
     for (const field of requiredFields) {
@@ -45,11 +45,11 @@ speciesRoute.post("/species", async (req, res) => {
       }
     }
 
-    const newSpecies = await Species.create(body);
+    const newRace = await Race.create(body);
     return res.status(201).send({
       status: "ok",
-      message: "Species created successfully!",
-      data: newSpecies,
+      message: "Race created successfully!",
+      data: newRace,
     });
   } catch (error) {
     console.error("Something went wrong:", error);
@@ -61,35 +61,35 @@ speciesRoute.post("/species", async (req, res) => {
   }
 });
 
-// update a species by id
-speciesRoute.put("/species/:id", async (req, res) => {
+// update a race by id
+raceRoute.put("/race/:id", async (req, res) => {
   try {
-    const speciesId = req.params.id;
+    const raceId = req.params.id;
     const body = req.body;
 
-    if (!speciesId) {
+    if (!raceId) {
       return res.status(400).send({
         status: "error",
-        message: "Species ID is required",
+        message: "Race ID is required",
       });
     }
 
-    const updatedSpecies = await Species.findByIdAndUpdate(speciesId, body, {
+    const updatedRace = await Race.findByIdAndUpdate(raceId, body, {
       new: true,
       runValidators: true,
     });
 
-    if (!updatedSpecies) {
+    if (!updatedRace) {
       return res.status(404).send({
         status: "error",
-        message: "Species not found",
+        message: "Race not found",
       });
     }
 
     return res.status(200).send({
       status: "ok",
-      message: "Species updated successfully!",
-      data: updatedSpecies,
+      message: "Race updated successfully!",
+      data: updatedRace,
     });
   } catch (error) {
     console.error("Server error", error);
@@ -101,30 +101,30 @@ speciesRoute.put("/species/:id", async (req, res) => {
   }
 });
 
-// delete a species by id
-speciesRoute.delete("/species/:id", async (req, res) => {
+// delete a race by id
+raceRoute.delete("/race/:id", async (req, res) => {
   try {
-    const speciesId = req.params.id;
+    const raceId = req.params.id;
 
-    if (!speciesId) {
+    if (!raceId) {
       return res.status(400).send({
         status: "error",
-        message: "Species ID is required",
+        message: "Race ID is required",
       });
     }
 
-    const deletedSpecies = await Species.findByIdAndDelete(speciesId);
+    const deletedRace = await Race.findByIdAndDelete(raceId);
 
-    if (!deletedSpecies) {
+    if (!deletedRace) {
       return res.status(404).send({
         status: "error",
-        message: "Species not found",
+        message: "Race not found",
       });
     }
 
     return res.status(200).send({
       status: "ok",
-      message: "Species deleted successfully!",
+      message: "Race deleted successfully!",
     });
   } catch (error) {
     console.error("Server error", error);
@@ -136,4 +136,4 @@ speciesRoute.delete("/species/:id", async (req, res) => {
   }
 });
 
-export default speciesRoute;
+export default raceRoute;

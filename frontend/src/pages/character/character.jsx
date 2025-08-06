@@ -2,21 +2,6 @@
 import styles from "./character.module.css";
 
 //? Components --------------------------------------------------
-import Character from "../../components/character/character.jsx";
-import Info from "../../components/info/info.jsx";
-import Stats from "../../components/stats/stats.jsx";
-import Inspiration from "../../components/inspiration/inspiration.jsx";
-import Bonus from "../../components/bonus/bonus.jsx";
-import Saving from "../../components/saving/saving.jsx";
-import Skills from "../../components/skills/skills.jsx";
-import Passive from "../../components/passive/passive.jsx";
-import ProfLang from "../../components/proflang/proflang.jsx";
-import Def from "../../components/def/def.jsx";
-import Weapons from "../../components/weapons/weapons.jsx";
-import Equipment from "../../components/equipment/equipment.jsx";
-import Personality from "../../components/personality/personality.jsx";
-import Traits from "../../components/traits/traits.jsx";
-
 import Input from "../../components/input/input.jsx";
 
 //? React ------------------------------------------------------
@@ -64,8 +49,8 @@ function CharacterPage() {
     const commonProperties = {
       character: character,
       update: updateCharacter,
-      weaponUpdate: updateWeapon,
-      weaponDelete: deleteWeapon,
+      updateWeapon: updateWeapon,
+      deleteWeapon: deleteWeapon,
       // update: test,
       // weaponUpdate: test1,
       // weaponDelete: test,
@@ -83,46 +68,490 @@ function CharacterPage() {
           <a href="/">Frontpage</a>
         </li>
         <li>
-          <Character {...setCommonProperties()} />
+          <ul>
+            <li>Character Name: {character.name}</li>
+            <li>
+              <Input
+                id="name"
+                character={character}
+                updateCharacter={updateCharacter}
+              />
+            </li>
+          </ul>
         </li>
         <li>
-          <Stats {...setCommonProperties()} />
+          <ul>
+            {Object.keys(character.stats)
+              .sort()
+              .map((key, index) => {
+                return (
+                  <li key={index}>
+                    {key}: {character.stats[key]}
+                    <Input
+                      id={key}
+                      type="number"
+                      character={character}
+                      updateCharacter={updateCharacter}
+                      blur={"object"}
+                      layer={"stats"}
+                    />
+                  </li>
+                );
+              })}
+          </ul>
         </li>
         <li>
-          <Info {...setCommonProperties()} />
+          <ul>
+            <li>
+              Class: {character.class}
+              <Input
+                id="class"
+                character={character}
+                updateCharacter={updateCharacter}
+              />
+            </li>
+            <li>
+              Level: {character.level}
+              <Input
+                id="level"
+                type="number"
+                character={character}
+                updateCharacter={updateCharacter}
+              />
+            </li>
+            <li>
+              Race: {character.race}
+              <Input
+                id="race"
+                character={character}
+                updateCharacter={updateCharacter}
+              />
+            </li>
+            <li>
+              Background: {character.background}
+              <Input
+                id="background"
+                character={character}
+                updateCharacter={updateCharacter}
+              />
+            </li>
+            <li>
+              Alignment: {character.alignment}
+              <Input
+                id="alignment"
+                character={character}
+                updateCharacter={updateCharacter}
+              />
+            </li>
+            <li>
+              Name: {character.playerName}
+              <Input
+                id="playerName"
+                character={character}
+                updateCharacter={updateCharacter}
+              />
+            </li>
+            <li>
+              XP: {character.experience}
+              <Input
+                id="experience"
+                type="number"
+                character={character}
+                updateCharacter={updateCharacter}
+              />
+            </li>
+          </ul>
         </li>
         <li>
-          <Inspiration {...setCommonProperties()} />
+          <ul>
+            <li>
+              Inspiration: {character.inspiration ? "True" : "False"}{" "}
+              <Input
+                id="inspiration"
+                type="checkbox"
+                character={character}
+                updateCharacter={updateCharacter}
+              />
+            </li>
+          </ul>
         </li>
         <li>
-          <Bonus {...setCommonProperties()} />
+          <ul>
+            <li>
+              proficiencyBonus: {character.proficiencyBonus}
+              <input
+                type="number"
+                id="proficiencyBonus"
+                placeholder={character.proficiencyBonus}
+                onKeyUp={(e) => {
+                  if (e.key === "Enter") e.target.blur();
+                }}
+                onBlur={(e) => {
+                  if (character[e.target.id] !== e.target.value) {
+                    update(character._id, { [e.target.id]: e.target.value });
+                  }
+                }}
+                defaultValue={character.proficiencyBonus}
+              />
+            </li>
+          </ul>
         </li>
         <li>
-          <Saving {...setCommonProperties()} />
+          <ul>
+            <li>Saving throws:</li>
+            {character.saves.map((save, index) => (
+              <li key={index}>
+                {save}
+                <button
+                  id="saves"
+                  onClick={(e) =>
+                    update(character._id, {
+                      [e.target.id]: character[e.target.id].filter(
+                        (x) => x !== save
+                      ),
+                    })
+                  }
+                >
+                  delete
+                </button>
+              </li>
+            ))}
+            <li>
+              <Input
+                id="saves"
+                character={character}
+                updateCharacter={updateCharacter}
+                blur={"array"}
+              />
+            </li>
+          </ul>
         </li>
         <li>
-          <Skills {...setCommonProperties()} />
+          <ul>
+            <li>Skills</li>
+            {character.skills.map((skill, index) => (
+              <li key={index}>
+                {skill}
+
+                <button
+                  id="skills"
+                  onClick={(e) =>
+                    update(character._id, {
+                      [e.target.id]: character[e.target.id].filter(
+                        (x) => x !== skill
+                      ),
+                    })
+                  }
+                >
+                  delete
+                </button>
+              </li>
+            ))}
+            <li>
+              <Input
+                id="skills"
+                character={character}
+                updateCharacter={updateCharacter}
+                blur={"array"}
+              />
+            </li>
+          </ul>
         </li>
         <li>
-          <Passive {...setCommonProperties()} />
+          <ul>
+            <li>Passive: {character.passiveWisdom}</li>
+            <li>
+              <Input
+                id="passiveWisdom"
+                type="number"
+                character={character}
+                updateCharacter={updateCharacter}
+              />
+            </li>
+          </ul>
         </li>
         <li>
-          <ProfLang {...setCommonProperties()} />
+          <ul>
+            <li>ProfLang:</li>
+            {character.otherProficiencies.map((proficiency, index) => (
+              <li key={index}>
+                {proficiency}
+
+                <button
+                  id="otherProficiencies"
+                  onClick={(e) =>
+                    update(character._id, {
+                      [e.target.id]: character[e.target.id].filter(
+                        (x) => x !== proficiency
+                      ),
+                    })
+                  }
+                >
+                  delete
+                </button>
+              </li>
+            ))}
+            <li>
+              <Input
+                id="otherProficiencies"
+                character={character}
+                updateCharacter={updateCharacter}
+                blur={"array"}
+              />
+            </li>
+          </ul>
         </li>
         <li>
-          <Def {...setCommonProperties()} />
+          <ul>
+            <li>
+              Armor Class: {character.armorClass}
+              <Input
+                id="armorClass"
+                type="number"
+                character={character}
+                updateCharacter={updateCharacter}
+              />
+            </li>
+            <li>
+              Initiative: {character.initiative}
+              <Input
+                id="initiative"
+                type="number"
+                character={character}
+                updateCharacter={updateCharacter}
+              />
+            </li>
+            <li>
+              Speed: {character.speed}
+              <Input
+                id="speed"
+                type="number"
+                character={character}
+                updateCharacter={updateCharacter}
+              />
+            </li>
+            <li>
+              <p>Health:</p>
+              <ul>
+                {Object.keys(character.health).map((key, index) => {
+                  return (
+                    <li key={index}>
+                      {key}: {character.health[key]}
+                      <Input
+                        id={key}
+                        type="number"
+                        character={character}
+                        updateCharacter={updateCharacter}
+                        blur={"object"}
+                        layer={"health"}
+                      />
+                    </li>
+                  );
+                })}
+              </ul>
+            </li>
+            <li>
+              Hit dice: D{character.dice}
+              <Input
+                id="dice"
+                type="number"
+                character={character}
+                updateCharacter={updateCharacter}
+              />
+            </li>
+            <li>
+              <p>Death Saves:</p>
+              <ul>
+                {Object.keys(character.deathSaves).map((key, index) => {
+                  return (
+                    <li key={index}>
+                      {key}: {character.deathSaves[key]}
+                      <Input
+                        id={key}
+                        type="number"
+                        character={character}
+                        updateCharacter={updateCharacter}
+                        blur={"object"}
+                        layer={"deathSaves"}
+                      />
+                    </li>
+                  );
+                })}
+              </ul>
+            </li>
+          </ul>
         </li>
         <li>
-          <Weapons {...setCommonProperties()} />
+          <ul>
+            <li>Weapons:</li>
+            {character.attack.map((weapon, windex) => (
+              <li key={weapon?._id || windex}>
+                <ul>
+                  {weapon &&
+                    Object.keys(weapon).map((key, index) => {
+                      console.log("key:", [key], "index:", index);
+                      if (key && index > 1) {
+                        if (key !== "_id")
+                          return (
+                            <li key={key}>
+                              {key}: {weapon[key]}
+                              <Input
+                                id={key}
+                                type="number"
+                                character={character}
+                                updateCharacter={updateWeapon}
+                                blur="attack"
+                                weaponId={weapon._id}
+                                layer={windex}
+                              />
+                            </li>
+                          );
+                      } else if (index === 0) {
+                        var damage = weapon[key];
+                        return (
+                          <li key={key}>
+                            {key}:{" "}
+                            {Object.keys(damage)
+                              .map((key) => damage[key])
+                              .join("D")}
+                            {Object.keys(damage).map((key) => (
+                              <p key={key}>
+                                {key}
+                                <Input
+                                  id={key}
+                                  type="number"
+                                  character={character}
+                                  updateCharacter={updateWeapon}
+                                  blur="attackDamage"
+                                  weaponId={weapon._id}
+                                  layer={windex}
+                                  layer2="damage"
+                                />
+                              </p>
+                            ))}
+                          </li>
+                        );
+                      } else {
+                        return (
+                          <li key={key}>
+                            {key}: {weapon[key]}
+                            <button
+                              id={key}
+                              onClick={(e) =>
+                                weaponDelete(character._id, weapon._id, {
+                                  attack: character.attack.filter(
+                                    (x) => x._id !== weapon._id
+                                  ),
+                                })
+                              }
+                            >
+                              delete
+                            </button>
+                            <Input
+                              id={key}
+                              character={character}
+                              updateCharacter={updateWeapon}
+                              blur="attack"
+                              weaponId={weapon._id}
+                              layer={windex}
+                            />
+                          </li>
+                        );
+                      }
+                    })}
+                </ul>
+              </li>
+            ))}
+            <li>
+              <Input
+                id="attackName"
+                character={character}
+                updateCharacter={updateCharacter}
+                blur="weapon"
+              />
+            </li>
+          </ul>
         </li>
         <li>
-          <Equipment {...setCommonProperties()} />
+          <ul>
+            Equipment:{" "}
+            {character.equipment.map((equip) => (
+              <li key={equip}>
+                {equip}
+
+                <button
+                  id="equipment"
+                  onClick={(e) =>
+                    update(character._id, {
+                      [e.target.id]: character[e.target.id].filter(
+                        (x) => x !== equip
+                      ),
+                    })
+                  }
+                >
+                  delete
+                </button>
+              </li>
+            ))}
+            <li>
+              <Input
+                id="equipment"
+                character={character}
+                updateCharacter={updateCharacter}
+                blur={"array"}
+              />
+            </li>
+          </ul>
         </li>
         <li>
-          <Personality {...setCommonProperties()} />
+          <ul>
+            Personality
+            {Object.keys(character.personality).map((key) => {
+              return (
+                <li key={key}>
+                  {key}: {character.personality[key]}
+                  <Input
+                    id={key}
+                    character={character}
+                    updateCharacter={updateCharacter}
+                    blur={"object"}
+                    layer={"personality"}
+                  />
+                </li>
+              );
+            })}
+          </ul>
         </li>
         <li>
-          <Traits {...setCommonProperties()} />
+          <ul>
+            Traits:
+            {character.featuresTraits.map((trait, index) => (
+              <li key={index}>
+                {trait}
+
+                <button
+                  id="featuresTraits"
+                  onClick={(e) =>
+                    update(character._id, {
+                      [e.target.id]: character[e.target.id].filter(
+                        (x) => x !== trait
+                      ),
+                    })
+                  }
+                >
+                  delete
+                </button>
+              </li>
+            ))}
+            <li>
+              <Input
+                id="featuresTraits"
+                character={character}
+                updateCharacter={updateCharacter}
+                blur={"array"}
+              />
+            </li>
+          </ul>
         </li>
       </ul>
     )

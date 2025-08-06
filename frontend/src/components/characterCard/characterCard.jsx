@@ -21,18 +21,16 @@ function CharacterCard({ characters, deleteCharacter }) {
         onClick={() => deleteCharacter(character._id)}
       ></i>
       <h2>{character.name}</h2>
-      {character.image ? (
-        <img
-          src={character.image}
-          alt={character.name}
-          className={styles.characterImage}
-        />
-      ) : (
-        <i className={"fa-regular " + "fa-image " + styles.icon}></i>
-      )}
-      <p>{character.class}</p>
+      <img
+        src={`/src/assets/class/${character.class}.png`}
+        alt="test"
+        className={styles.img}
+      ></img>
+      <p>
+        {character.background} {character.class}
+      </p>
       <button onClick={() => selectCharacter(character._id)}>
-        Select Character
+        Select {character.race}
       </button>
     </div>
   ));

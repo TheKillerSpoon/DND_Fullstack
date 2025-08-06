@@ -1,7 +1,8 @@
 import express from "express";
 import { getCharacter } from "../handlers/character.handler.js";
 import { getClass } from "../handlers/class.handler.js";
-import { getSpecies } from "../handlers/species.handler.js";
+import { getRace } from "../handlers/race.handler.js";
+import { getBackground } from "../handlers/background.handler.js";
 import Character from "../models/character.model.js";
 
 const characterRoute = express.Router();
@@ -13,26 +14,35 @@ const test = ["class", "race", "background", "alignment", "name"];
 // This variable is used to control the validation state
 let validate = true;
 const validateCharacter = async (body) => {
-  // These variables will be used to check if the class and species exist
-  let [classesExists, speciesExists] = [true, true];
+  const characterValidationCriteria = [
+    {
+      data: getClass,
+      comparison: body.class,
+    },
+    {
+      data: getRace,
+      comparison: body.race,
+    },
+    {
+      data: getBackground,
+      comparison: body.background,
+    },
+  ];
 
-  // fetching data
-  const [classes, species] = await Promise.all([getClass(), getSpecies()]);
+  const validationPromises = characterValidationCriteria.map((v) => {
+    return v.data().then((data) => {
+      if (!v.comparison) return true; // If no comparison value, skip validation
 
-  // validation checks
-  if (body.class) {
-    classesExists = classes.some(
-      (cls) => cls.className.toLowerCase() === body.class.toLowerCase()
-    );
-  }
-  if (body.race) {
-    speciesExists = species.some(
-      (spec) => spec.speciesName.toLowerCase() === body.race.toLowerCase()
-    );
-  }
+      return data.some(
+        (x) => x.name.toLowerCase() === v.comparison.toLowerCase()
+      );
+    });
+  });
+
+  const validationResults = await Promise.all(validationPromises);
 
   // if any of the checks fail, set validate to false
-  validate = [classesExists, speciesExists].every((x) => x === true);
+  validate = validationResults.every((x) => x === true);
 };
 
 //! universal routes -----------------------------------------------------------------
@@ -91,6 +101,13 @@ characterRoute.post("/character", async (req, res) => {
     });
 
     await validateCharacter(req.body);
+
+    if (!validate) {
+      return res.status(400).send({
+        status: "error",
+        message: "Invalid class provided",
+      });
+    }
 
     var character = new Character(req.body);
     await character.save();

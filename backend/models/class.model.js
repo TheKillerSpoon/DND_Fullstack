@@ -42,7 +42,7 @@ const skills = [
 const classSchema = new Schema(
   {
     //* Class name ----------------------------------------------------------------------
-    className: { type: String, required: [true, "Name is required"] },
+    name: { type: String, required: [true, "Name is required"] },
     //* Primary Ability -----------------------------------------------------------------
     primaryAbility: {
       amount: {

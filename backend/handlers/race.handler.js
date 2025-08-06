@@ -1,23 +1,23 @@
 import { dbConnect } from "../dbConnect.js";
-import classModel from "../models/class.model.js";
+import raceModel from "../models/race.model.js";
 
-// Get all class
-export const getClass = async () => {
+// Get all race
+export const getRace = async () => {
   try {
     await dbConnect();
-    const classes = await classModel.find({});
-    return classes;
+    const race = await raceModel.find({});
+    return race;
   } catch (error) {
     throw new Error("Der skete en fejl:");
   }
 };
 
-// create a new class
-export const createClass = async (body) => {
+// create a new race
+export const createRace = async (body) => {
   try {
     await dbConnect();
-    const data = await classModel.create(body);
-    return data;
+    const race = await raceModel.create(body);
+    return race;
   } catch (error) {
     console.error("something went wrong:", error);
     throw new Error("something went wrong:", error);
