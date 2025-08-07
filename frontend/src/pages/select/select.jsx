@@ -1,5 +1,5 @@
 //? Styles -----------------------------------------------------
-import styles from "./frontpage.module.css";
+import styles from "./select.module.css";
 
 //? Hooks ------------------------------------------------------
 import { fetchCharacter } from "../../hooks/character/FetchCharacter.jsx";
@@ -12,27 +12,31 @@ import CharacterCard from "../../components/characterCard/characterCard.jsx";
 import CreateCard from "../../components/createCard/createCard.jsx";
 
 //? Frontpage --------------------------------------------------
-function Frontpage() {
-  const { getAllCharacters, createCharacter, deleteCharacter, characters } =
-    fetchCharacter();
+function SelectPage() {
+  const { createCharacter, deleteCharacter, characters } = fetchCharacter();
 
   useEffect(() => {
-    getAllCharacters();
     localStorage.removeItem("character");
   }, []);
 
   return (
     <section className={styles.frontpageContainer}>
-      <h1>FrontPage</h1>
+      <h1>Select Character</h1>
       <section className={styles.frontpage}>
-        <CharacterCard
-          characters={characters}
-          deleteCharacter={deleteCharacter}
-        />
-        <CreateCard characters={characters} createCharacter={createCharacter} />
+        {characters.length
+          ? characters.map((character) => (
+              <CharacterCard
+                deleteCharacter={deleteCharacter}
+                character={character}
+              />
+            ))
+          : ""}
+        {characters.length < 10 && (
+          <CreateCard createCharacter={createCharacter} />
+        )}
       </section>
     </section>
   );
 }
 
-export default Frontpage;
+export default SelectPage;

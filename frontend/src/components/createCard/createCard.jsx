@@ -8,39 +8,40 @@ import { useForm } from "react-hook-form";
 import FormInput from "../formInput/formInput.jsx";
 
 //? CreateCard -------------------------------------------------
-function CreateCard({ characters, createCharacter }) {
+function CreateCard({ createCharacter }) {
   const { register, handleSubmit, setValue } = useForm();
 
   return (
-    characters.length < 10 && (
-      <div className={styles.characterCard}>
-        <h2>New Character</h2>
+    <div className={styles.characterCard}>
+      <h2>New Character</h2>
 
-        <form
-          onSubmit={handleSubmit((data) => {
-            createCharacter(data);
-            setValue("name", "");
-            setValue("class", "");
-            setValue("race", "");
-            setValue("background", "");
-          })}
-        >
+      <form
+        onSubmit={handleSubmit((data) => {
+          createCharacter(data);
+          setValue("name", "");
+          setValue("class", "");
+          setValue("race", "");
+          setValue("background", "");
+        })}
+      >
+        <fieldset>
+          <legend>Name Your Character</legend>
           <input
             {...register("name", { required: true })}
             type="text"
             id="characterName"
-            placeholder="Character Name *"
+            placeholder="Name *"
             required
           />
+        </fieldset>
 
-          <FormInput location="class" register={register} />
-          <FormInput location="race" register={register} />
-          <FormInput location="background" register={register} />
+        <FormInput location="class" register={register} />
+        <FormInput location="race" register={register} />
+        <FormInput location="background" register={register} />
 
-          <button type="submit">Create Character</button>
-        </form>
-      </div>
-    )
+        <button type="submit">Create Character</button>
+      </form>
+    </div>
   );
 }
 

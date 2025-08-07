@@ -1,12 +1,12 @@
 import { useRoutes } from "react-router-dom";
 
 // Importing the components for the different pages
-import Frontpage from "./pages/frontpage/frontpage";
+import SelectPage from "./pages/select/select.jsx";
 import CharacterPage from "./pages/character/character.jsx";
 
 function App() {
   const routes = useRoutes([
-    { path: "/", element: <Frontpage /> },
+    { path: "/", element: <SelectPage /> },
     { path: "/character", element: <CharacterPage /> },
   ]);
 

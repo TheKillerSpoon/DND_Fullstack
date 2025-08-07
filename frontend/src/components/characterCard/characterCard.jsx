@@ -5,7 +5,7 @@ import styles from "./characterCard.module.css";
 import { useNavigate } from "react-router-dom";
 
 //? CharacterCard ----------------------------------------------
-function CharacterCard({ characters, deleteCharacter }) {
+export default function CharacterCard({ deleteCharacter, character }) {
   const navigate = useNavigate();
 
   const selectCharacter = (characterId) => {
@@ -14,8 +14,8 @@ function CharacterCard({ characters, deleteCharacter }) {
     navigate("/character");
   };
 
-  return characters.map((character) => (
-    <div key={character._id} className={styles.characterCard}>
+  return (
+    <div className={styles.characterCard}>
       <i
         className={"fa-solid " + "fa-trash-can " + styles.trash}
         onClick={() => deleteCharacter(character._id)}
@@ -33,7 +33,5 @@ function CharacterCard({ characters, deleteCharacter }) {
         Select {character.race}
       </button>
     </div>
-  ));
+  );
 }
-
-export default CharacterCard;

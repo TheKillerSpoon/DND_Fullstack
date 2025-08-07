@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 //! This hook provides functions to interact with a REST API for managing characters and their weapons.
 
@@ -44,6 +44,10 @@ export const fetchCharacter = () => {
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    getAllCharacters();
+  }, []);
 
   // Get character by id
   const getCharacterById = async (id) => {
