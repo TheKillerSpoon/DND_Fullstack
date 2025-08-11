@@ -48,7 +48,12 @@ const traitsIdealsBondsFlaws = () => {
 const characterSchema = new Schema(
   {
     //* Character name ----------------------------------------------------------------------
-    name: { type: String, required: [true, "Name is required"] },
+    name: {
+      type: String,
+      required: [true, "Name is required"],
+      maxlength: [50, "Name can't be longer than 50 characters"],
+      minlength: [1, "Name can't be empty"],
+    },
     //* class -------------------------------------------------------------------------------
     class: {
       type: String,

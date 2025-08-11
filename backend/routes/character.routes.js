@@ -1,9 +1,8 @@
 import express from "express";
-import { getCharacter } from "../handlers/character.handler.js";
-import { getClass } from "../handlers/class.handler.js";
-import { getRace } from "../handlers/race.handler.js";
-import { getBackground } from "../handlers/background.handler.js";
 import Character from "../models/character.model.js";
+import classModel from "../models/class.model.js";
+import raceModel from "../models/race.model.js";
+import backgroundModel from "../models/background.model.js";
 
 const characterRoute = express.Router();
 
@@ -16,27 +15,25 @@ let validate = true;
 const validateCharacter = async (body) => {
   const characterValidationCriteria = [
     {
-      data: getClass,
+      data: await classModel.find({}),
       comparison: body.class,
     },
     {
-      data: getRace,
+      data: await raceModel.find({}),
       comparison: body.race,
     },
     {
-      data: getBackground,
+      data: await backgroundModel.find({}),
       comparison: body.background,
     },
   ];
 
   const validationPromises = characterValidationCriteria.map((v) => {
-    return v.data().then((data) => {
-      if (!v.comparison) return true; // If no comparison value, skip validation
+    if (!v.comparison) return true; // If no comparison value, skip validation
 
-      return data.some(
-        (x) => x.name.toLowerCase() === v.comparison.toLowerCase()
-      );
-    });
+    return v.data.some(
+      (x) => x.name.toLowerCase() === v.comparison.toLowerCase()
+    );
   });
 
   const validationResults = await Promise.all(validationPromises);
@@ -50,7 +47,7 @@ const validateCharacter = async (body) => {
 // get all characters
 characterRoute.get("/characters", async (req, res) => {
   try {
-    const result = await getCharacter();
+    const result = await Character.find({});
     return res.status(200).send({
       status: "ok",
       message: "characters found!",
@@ -109,8 +106,8 @@ characterRoute.post("/character", async (req, res) => {
       });
     }
 
-    var character = new Character(req.body);
-    await character.save();
+    var character = Character.create(req.body);
+
     res.status(201).send(character);
   } catch (error) {
     console.error("Server-fejl", error);

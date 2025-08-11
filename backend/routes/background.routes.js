@@ -1,5 +1,4 @@
 import express from "express";
-import { getBackground } from "../handlers/background.handler.js";
 import Background from "../models/background.model.js";
 
 const backgroundRoute = express.Router();
@@ -9,7 +8,7 @@ const backgroundRoute = express.Router();
 // get all backgrounds
 backgroundRoute.get("/backgrounds", async (req, res) => {
   try {
-    const result = await getBackground();
+    const result = await Background.find({});
     console.log(
       "Backgrounds found:",
       result.map((x) => x.name)

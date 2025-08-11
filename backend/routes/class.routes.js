@@ -1,5 +1,4 @@
 import express from "express";
-import { getClass } from "../handlers/class.handler.js";
 import Class from "../models/class.model.js";
 
 const classRoute = express.Router();
@@ -9,7 +8,7 @@ const classRoute = express.Router();
 // get all classes
 classRoute.get("/classes", async (req, res) => {
   try {
-    const result = await getClass();
+    const result = await Class.find({});
     console.log(
       "Classes found:",
       result.map((x) => x.name)

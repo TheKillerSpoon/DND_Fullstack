@@ -1,5 +1,4 @@
 import express from "express";
-import { getRace } from "../handlers/race.handler.js";
 import Race from "../models/race.model.js";
 
 const raceRoute = express.Router();
@@ -9,7 +8,7 @@ const raceRoute = express.Router();
 // get all races
 raceRoute.get("/races", async (req, res) => {
   try {
-    const result = await getRace();
+    const result = await Race.find({});
     console.log(
       "Races found:",
       result.map((x) => x.name)

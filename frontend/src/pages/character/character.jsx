@@ -25,7 +25,7 @@ function CharacterPage() {
     if (CharacterID) {
       getCharacterById(CharacterID);
     } else {
-      useNavigate().navigate("/");
+      useNavigate().navigate("/select");
     }
   }, []);
 
@@ -65,7 +65,7 @@ function CharacterPage() {
           <h1>Character</h1>
         </li>
         <li>
-          <a href="/">Frontpage</a>
+          <a href="/select">selcet page</a>
         </li>
         <li>
           <ul>

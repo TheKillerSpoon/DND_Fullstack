@@ -11,7 +11,7 @@ import { useEffect } from "react";
 import CharacterCard from "../../components/characterCard/characterCard.jsx";
 import CreateCard from "../../components/createCard/createCard.jsx";
 
-//? Frontpage --------------------------------------------------
+//? Select Character Page --------------------------------------------------
 function SelectPage() {
   const { createCharacter, deleteCharacter, characters } = fetchCharacter();
 
