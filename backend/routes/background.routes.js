@@ -1,5 +1,6 @@
 import express from "express";
 import Background from "../models/background.model.js";
+import { adminAuth } from "../middelware/auth.middelware.js";
 
 const backgroundRoute = express.Router();
 
@@ -29,7 +30,7 @@ backgroundRoute.get("/backgrounds", async (req, res) => {
 });
 
 // create a new background
-backgroundRoute.post("/background", async (req, res) => {
+backgroundRoute.post("/background", adminAuth, async (req, res) => {
   try {
     let body = req.body;
     const requiredFields = ["name"];
@@ -61,7 +62,7 @@ backgroundRoute.post("/background", async (req, res) => {
 });
 
 // update a background by id
-backgroundRoute.put("/background/:id", async (req, res) => {
+backgroundRoute.put("/background/:id", adminAuth, async (req, res) => {
   try {
     const backgroundId = req.params.id;
     const body = req.body;
@@ -105,7 +106,7 @@ backgroundRoute.put("/background/:id", async (req, res) => {
 });
 
 // delete a background by id
-backgroundRoute.delete("/background/:id", async (req, res) => {
+backgroundRoute.delete("/background/:id", adminAuth, async (req, res) => {
   try {
     const backgroundId = req.params.id;
 

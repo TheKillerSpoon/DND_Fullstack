@@ -10,6 +10,7 @@ import classRoute from "./routes/class.routes.js";
 import raceRoute from "./routes/race.routes.js";
 import backgroundRoute from "./routes/background.routes.js";
 import userRoute from "./routes/user.routes.js";
+import authRoute from "./routes/auth.route.js";
 
 const expressServer = express();
 
@@ -24,7 +25,8 @@ expressServer.use(
   classRoute,
   raceRoute,
   backgroundRoute,
-  userRoute
+  userRoute,
+  authRoute
 );
 
 expressServer.listen(3042, () => {

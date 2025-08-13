@@ -1,10 +1,12 @@
 import express from "express";
+import bcryptjs from "bcryptjs";
 import User from "../models/user.model.js";
+import { auth, adminAuth } from "../middelware/auth.middelware.js";
 
 const userRoute = express.Router();
 
 // get all users
-userRoute.get("/users", async (req, res) => {
+userRoute.get("/users", adminAuth, async (req, res) => {
   try {
     const result = await User.find({});
 
@@ -23,7 +25,7 @@ userRoute.get("/users", async (req, res) => {
 });
 
 // get user by id
-userRoute.get("/users/:id", async (req, res) => {
+userRoute.get("/user/:id", auth, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -34,12 +36,20 @@ userRoute.get("/users/:id", async (req, res) => {
         data: result,
       });
     }
-    const result = await user.findById(id);
+
+    const user = await User.findById(id);
+    if (user._id !== req.user._id || user.role == "admin") {
+      return res.status(403).send({
+        status: "error",
+        message: "You cannot delete your own user.",
+        data: [],
+      });
+    }
 
     return res.status(200).send({
       status: "ok",
       message: "Users blev fundet",
-      data: result,
+      data: user,
     });
   } catch (error) {
     res.status(500).send({
@@ -51,15 +61,21 @@ userRoute.get("/users/:id", async (req, res) => {
 });
 
 // create a new user
-userRoute.post("/users", async (req, res) => {
+userRoute.post("/user", async (req, res) => {
   try {
-    const { name, email, hashedPassword, role } = req.body;
+    const { email, password } = req.body;
 
-    if (!name || !email || !hashedPassword || !role) {
-      throw new Error("Mangler enten name, email, hashedPassword eller role");
+    if (!email || !password) {
+      throw new Error("Mangler enten email eller password");
     }
 
-    const user = { name, email, hashedPassword, role };
+    if (req.body.role === "admin") {
+      throw new Error("admin role cant be set by user");
+    }
+
+    const hashedPassword = await bcryptjs.hash(password, 10);
+
+    const user = { email, hashedPassword };
 
     const result = await User.create(user);
 
@@ -78,7 +94,7 @@ userRoute.post("/users", async (req, res) => {
 });
 
 // delete a user by id
-userRoute.delete("/users/:id", async (req, res) => {
+userRoute.delete("/user/:id", auth, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -90,12 +106,21 @@ userRoute.delete("/users/:id", async (req, res) => {
       });
     }
 
-    const result = await User.findByIdAndDelete(id);
+    const user = await User.findById(id);
+    if (user._id !== req.user._id || user.role == "admin") {
+      return res.status(403).send({
+        status: "error",
+        message: "You cannot delete other users.",
+        data: [],
+      });
+    }
+
+    await User.findByIdAndDelete(id);
 
     return res.status(200).send({
       status: "ok",
       message: "fjernet",
-      data: result,
+      data: user,
     });
   } catch (error) {
     return res.status(500).send({
@@ -107,16 +132,19 @@ userRoute.delete("/users/:id", async (req, res) => {
 });
 
 // update a user
-userRoute.put("/users", async (req, res) => {
+userRoute.put("/user/:id", auth, async (req, res) => {
   try {
-    const { id, name, email, hashedPassword, role } = req.body;
+    const id = req.params.id;
+    const { name, email, password, role } = req.body;
 
     if (!id) {
       throw new Error("ingen id");
     }
 
-    if (!name || !email || !hashedPassword || !role) {
-      throw new Error("Mangler enten name, email, hashedPassword eller role");
+    let hashedPassword = undefined;
+
+    if (password) {
+      hashedPassword = await bcryptjs.hash(password, 10);
     }
 
     const newData = {
@@ -126,7 +154,27 @@ userRoute.put("/users", async (req, res) => {
       role,
     };
 
-    const result = await model.findByIdAndUpdate(id, newData);
+    console.log("newData", newData);
+
+    const user = await User.findById(id);
+
+    if (user._id.toString() !== req.user._id || req.user.role == "admin") {
+      return res.status(403).send({
+        status: "error",
+        message: "You cannot update other users.",
+        data: [],
+      });
+    }
+
+    if (newData.role !== "user" && req.user.role !== "admin") {
+      return res.status(403).send({
+        status: "error",
+        message: "only an admin can change the role",
+        data: [],
+      });
+    }
+
+    const result = await User.findByIdAndUpdate(id, newData);
 
     return res.status(200).send({
       status: "ok",

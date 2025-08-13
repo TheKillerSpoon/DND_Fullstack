@@ -1,5 +1,6 @@
 import express from "express";
 import Race from "../models/race.model.js";
+import { adminAuth } from "../middelware/auth.middelware.js";
 
 const raceRoute = express.Router();
 
@@ -29,7 +30,7 @@ raceRoute.get("/races", async (req, res) => {
 });
 
 // create a new race
-raceRoute.post("/race", async (req, res) => {
+raceRoute.post("/race", adminAuth, async (req, res) => {
   try {
     let body = req.body;
     const requiredFields = ["name"];
@@ -61,7 +62,7 @@ raceRoute.post("/race", async (req, res) => {
 });
 
 // update a race by id
-raceRoute.put("/race/:id", async (req, res) => {
+raceRoute.put("/race/:id", adminAuth, async (req, res) => {
   try {
     const raceId = req.params.id;
     const body = req.body;
@@ -101,7 +102,7 @@ raceRoute.put("/race/:id", async (req, res) => {
 });
 
 // delete a race by id
-raceRoute.delete("/race/:id", async (req, res) => {
+raceRoute.delete("/race/:id", adminAuth, async (req, res) => {
   try {
     const raceId = req.params.id;
 

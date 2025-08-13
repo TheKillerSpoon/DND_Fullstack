@@ -1,5 +1,6 @@
 import express from "express";
 import Class from "../models/class.model.js";
+import { adminAuth } from "../middelware/auth.middelware.js";
 
 const classRoute = express.Router();
 
@@ -29,7 +30,7 @@ classRoute.get("/classes", async (req, res) => {
 });
 
 // create a new class
-classRoute.post("/class", async (req, res) => {
+classRoute.post("/class", adminAuth, async (req, res) => {
   try {
     let body = req.body;
     const requiredFields = ["name"];
@@ -61,7 +62,7 @@ classRoute.post("/class", async (req, res) => {
 });
 
 // update a class by id
-classRoute.put("/class/:id", async (req, res) => {
+classRoute.put("/class/:id", adminAuth, async (req, res) => {
   try {
     const classId = req.params.id;
     const body = req.body;
@@ -101,7 +102,7 @@ classRoute.put("/class/:id", async (req, res) => {
 });
 
 // delete a class by id
-classRoute.delete("/class/:id", async (req, res) => {
+classRoute.delete("/class/:id", adminAuth, async (req, res) => {
   try {
     const classId = req.params.id;
 
