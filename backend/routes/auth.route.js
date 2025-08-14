@@ -8,6 +8,10 @@ const authRoute = express.Router();
 // Post login-data
 authRoute.post("/auth/signin", async (req, res) => {
   try {
+    console.log(
+      "Received sign-in request:",
+      await userModel.findOne({ email: req.body.email })
+    );
     const user = await userModel.findOne({ email: req.body.email });
 
     /* TEST UDEN MODEL - NÅR I HAR LAVET MODELLEN KAN DETTE SLETTES */

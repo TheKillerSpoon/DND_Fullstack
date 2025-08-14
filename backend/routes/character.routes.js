@@ -3,6 +3,7 @@ import Character from "../models/character.model.js";
 import classModel from "../models/class.model.js";
 import raceModel from "../models/race.model.js";
 import backgroundModel from "../models/background.model.js";
+import userModel from "../models/user.model.js";
 
 const characterRoute = express.Router();
 
@@ -12,7 +13,7 @@ const test = ["class", "race", "background", "alignment", "name"];
 //! validation -----------------------------------------------------------------------
 // This variable is used to control the validation state
 let validate = true;
-const validateCharacter = async (body) => {
+const validateCharacter = async (body, userID) => {
   const characterValidationCriteria = [
     {
       data: await classModel.find({}),
@@ -38,6 +39,10 @@ const validateCharacter = async (body) => {
 
   const validationResults = await Promise.all(validationPromises);
 
+  if (!userID) {
+    validationResults.push(false); // Ensure userID is always present
+  }
+
   // if any of the checks fail, set validate to false
   validate = validationResults.every((x) => x === true);
 };
@@ -45,9 +50,17 @@ const validateCharacter = async (body) => {
 //! universal routes -----------------------------------------------------------------
 
 // get all characters
-characterRoute.get("/characters", async (req, res) => {
+characterRoute.get("/characters/:userID", async (req, res) => {
   try {
-    const result = await Character.find({});
+    console.log("request", req.params.userID);
+
+    let user = await userModel.findById(req.params.userID);
+
+    const result = await Character.find({
+      _id: {
+        $in: user.characterIDs,
+      },
+    });
     return res.status(200).send({
       status: "ok",
       message: "characters found!",
@@ -97,16 +110,55 @@ characterRoute.post("/character", async (req, res) => {
       if (body[key] == "" || !body[key]) body[key] = undefined;
     });
 
-    await validateCharacter(req.body);
+    await validateCharacter(req.body, body.userID);
 
     if (!validate) {
       return res.status(400).send({
         status: "error",
-        message: "Invalid class provided",
+        message: "Invalid character provided",
       });
     }
 
-    var character = Character.create(req.body);
+    const userID = body.userID;
+
+    let user = await userModel.findById(userID);
+
+    if (!user) {
+      return res.status(404).send({
+        status: "error",
+        message: "User not found",
+        data: null,
+      });
+    }
+
+    if (user.characterIDs.length >= 10) {
+      return res.status(400).send({
+        status: "error",
+        message: "User has already reached the limit of 10 characters.",
+        data: null,
+      });
+    }
+
+    body = {
+      name: body.name,
+      class: body.class,
+      race: body.race,
+      background: body.background,
+      alignment: body.alignment,
+    };
+
+    var character = await Character.create(body);
+
+    user.characterIDs.push(character._id);
+
+    await userModel.findByIdAndUpdate(
+      userID,
+      { characterIDs: user.characterIDs },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
 
     res.status(201).send(character);
   } catch (error) {
@@ -171,15 +223,32 @@ characterRoute.put("/character/:id", async (req, res) => {
 });
 
 // delete a character by id
-characterRoute.delete("/character/:id", async (req, res) => {
+characterRoute.delete("/character/:id/:userID", async (req, res) => {
   try {
-    if (!req.params.id) {
+    if (!req.params.id || !req.params.userID) {
       return res.status(400).send({
         status: "error",
-        message: "Character ID is required",
+        message: "Character ID and userID is required",
       });
     }
-    const character = await Character.findByIdAndDelete(req.params.id);
+
+    const user = await userModel.findById(req.params.userID);
+
+    user.characterIDs = user.characterIDs.filter(
+      (characterID) => characterID.toString() !== req.params.id
+    );
+
+    await userModel.findByIdAndUpdate(
+      req.params.userID,
+      { characterIDs: user.characterIDs },
+      {
+        new: true,
+        runValidators: true,
+      }
+    );
+
+    await Character.findByIdAndDelete(req.params.id);
+
     res.status(200).send({
       status: "ok",
       message: "Character deleted successfully",

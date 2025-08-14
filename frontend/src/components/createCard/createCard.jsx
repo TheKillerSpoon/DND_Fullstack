@@ -3,6 +3,10 @@ import styles from "./createCard.module.css";
 
 //? React ------------------------------------------------------
 import { useForm } from "react-hook-form";
+import { useEffect } from "react";
+
+//? Hooks ------------------------------------------------------
+import useAuth from "../../hooks/auth/useAuth";
 
 //? Components -------------------------------------------------
 import FormInput from "../formInput/formInput.jsx";
@@ -10,6 +14,11 @@ import FormInput from "../formInput/formInput.jsx";
 //? CreateCard -------------------------------------------------
 function CreateCard({ createCharacter }) {
   const { register, handleSubmit, setValue } = useForm();
+  const { user } = useAuth();
+
+  useEffect(() => {
+    setValue("userID", user._id);
+  }, []);
 
   return (
     <div className={styles.characterCard}>

@@ -1,4 +1,8 @@
+//? React ------------------------------------------------------
 import { useEffect, useState } from "react";
+
+//? Hooks ------------------------------------------------------
+import useAuth from "../../hooks/auth/useAuth";
 
 //! This hook provides functions to interact with a REST API for managing characters and their weapons.
 
@@ -25,14 +29,15 @@ export const fetchCharacter = () => {
   const [character, setCharacter] = useState(null);
   const [Error, setError] = useState(null);
   const [IsLoading, setIsLoading] = useState(false);
+  const { user } = useAuth();
 
   //! Universal -------------------------------------------
 
   // Get all characters
-  const getAllCharacters = async () => {
+  const getAllCharacters = async (userID) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/characters`);
+      const response = await fetch(`${API_URL}/characters/${userID}`);
       if (!response.ok) {
         throw new Error("Failed to fetch characters");
       }
@@ -46,7 +51,7 @@ export const fetchCharacter = () => {
   };
 
   useEffect(() => {
-    getAllCharacters();
+    getAllCharacters(user._id);
   }, []);
 
   // Get character by id
@@ -81,7 +86,9 @@ export const fetchCharacter = () => {
       if (!response.ok) {
         throw new Error("Failed to create character");
       }
-      getAllCharacters(); // Refresh the list after creating a character
+
+      console.log("test:", await response.json());
+      getAllCharacters(user._id); // Refresh the list after creating a character
     } catch (error) {
       setError(error.message);
     } finally {
@@ -116,13 +123,13 @@ export const fetchCharacter = () => {
   const deleteCharacter = async (id) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`${API_URL}/character/${id}`, {
+      const response = await fetch(`${API_URL}/character/${id}/${user._id}`, {
         method: "DELETE",
       });
       if (!response.ok) {
         throw new Error("Failed to delete character");
       }
-      getAllCharacters(); // Refresh the list after deleting a character
+      getAllCharacters(user._id); // Refresh the list after deleting a character
     } catch (error) {
       setError(error.message);
     } finally {
