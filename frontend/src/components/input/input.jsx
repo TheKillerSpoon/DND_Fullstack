@@ -61,50 +61,6 @@ export default function Input({
             },
             placeholder: `Add to ${id}`,
           }
-        : blur == "attack"
-        ? {
-            onBlur: (e) => {
-              if (character[blur][layer][id] !== e.target.value) {
-                update(
-                  character._id,
-                  weaponId,
-                  Object.keys(character[blur][layer]).map((key, index) => {
-                    if (key === id) {
-                      character[blur][layer][key] = e.target.value;
-                      return { attack: character[blur][layer] };
-                    } else return;
-                  })
-                );
-              }
-            },
-            placeholder: character[blur][layer][id],
-            defaultValue: character[blur][layer][id],
-          }
-        : blur == "attackDamage"
-        ? {
-            onBlur: (e) => {
-              if (character.attack[layer][layer2][id] !== e.target.value) {
-                update(character._id, weaponId, {
-                  [layer2]: {
-                    ...character.attack[layer][layer2],
-                    [id]: e.target.value,
-                  },
-                });
-              }
-            },
-            placeholder: character.attack[layer][layer2][id],
-            defaultValue: character.attack[layer][layer2][id],
-          }
-        : blur == "weapon"
-        ? {
-            onBlur: (e) => {
-              update(character._id, {
-                attack: [...character.attack, { [id]: e.target.value }],
-              });
-              e.target.value = ""; // Clear input after saving
-            },
-            placeholder: `Add ${blur} (name)`,
-          }
         : "")}
     />
   );

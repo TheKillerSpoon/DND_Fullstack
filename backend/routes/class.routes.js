@@ -35,14 +35,11 @@ classRoute.post("/class", adminAuth, async (req, res) => {
     let body = req.body;
     const requiredFields = ["name"];
 
-    // Check if all required fields are present
-    for (const field of requiredFields) {
-      if (!body[field]) {
-        return res.status(400).send({
-          status: "error",
-          message: `${field} is required`,
-        });
-      }
+    if (!body.name) {
+      return res.status(400).send({
+        status: "error",
+        message: `${field} is required`,
+      });
     }
 
     const newClass = await Class.create(body);

@@ -266,42 +266,8 @@ const characterSchema = new Schema(
     },
     //* attacks and spellcasting ------------------------------------------------------------
     attack: {
-      type: [
-        new Schema({
-          attackName: {
-            type: String,
-            required: true,
-            default: "weapon name",
-            minlength: [1, "Attack name can't be empty"],
-            maxlength: [100, "Attack name can't be longer than 100 characters"],
-          },
-          attackBonus: {
-            type: Number,
-            default: 0,
-            min: [-20, "Attack bonus can't be below -20"],
-            max: [20, "Attack bonus can't be above 20"],
-          },
-          damage: {
-            hits: {
-              type: Number,
-              default: 1,
-              min: [1, "Damage hits can't be below 1"],
-              max: [10, "Damage hits can't be above 10"],
-            },
-            hitDice: {
-              type: Number,
-              enum: { values: hitDice, message: "invalid hit dice" },
-              default: 4,
-            },
-          },
-          damageType: {
-            type: Number,
-            default: 0,
-            min: [0, "Damage type can't be below 0"],
-            max: [50, "Damage type can't be above 50"],
-          },
-        }),
-      ],
+      type: [Schema.Types.ObjectId],
+      ref: "weapon",
       default: [],
     },
     //* equipment ---------------------------------------------------------------------------
@@ -332,14 +298,7 @@ const character = mongoose.model("character", characterSchema);
 
 //     saves: ["strength", "constitution"],
 
-//     attack: [
-//       {
-//         attackName: "Test Attack",
-//       },
-//       {
-//         attackName: "yes",
-//       },
-//     ],
+//
 //   });
 //   _character
 //     .save()

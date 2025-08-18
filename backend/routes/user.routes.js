@@ -34,7 +34,6 @@ userRoute.get("/user/:id", auth, async (req, res) => {
       return res.status(500).send({
         status: "error",
         message: "id mangler",
-        data: result,
       });
     }
 

@@ -265,112 +265,112 @@ characterRoute.delete("/character/:id/:userID", async (req, res) => {
 
 //! weapon routes -----------------------------------------------------------------------------
 
-// add a new character attack
-characterRoute.post("/weapon/:id", async (req, res) => {
-  try {
-    if (!req.params.id) {
-      return res.status(400).send({
-        status: "error",
-        message: "Character ID is required",
-      });
-    }
+// // add a new character attack
+// characterRoute.post("/weapon/:id", async (req, res) => {
+//   try {
+//     if (!req.params.id) {
+//       return res.statu(400).send({
+//         status: "error",
+//         message: "Character ID is required",
+//       });
+//     }
 
-    const character = await Character.findById(req.params.id);
-    if (!character) {
-      return res.status(404).send("Character not found");
-    }
+//     const character = await Character.findById(req.params.id);
+//     if (!character) {
+//       return res.status(404).send("Character not found");
+//     }
 
-    character.attack.push(req.body);
-    await character.save();
+//     character.attack.push(req.body);
+//     await character.save();
 
-    res.status(201).send({
-      status: "ok",
-      message: "Weapon added successfully",
-      data: character,
-    });
-  } catch (error) {
-    console.error("Server-error", error);
-    res.status(500).send({
-      status: "error",
-      message: "Server-error",
-      error: error.message,
-    });
-  }
-});
+//     res.status(201).send({
+//       status: "ok",
+//       message: "Weapon added successfully",
+//       data: character,
+//     });
+//   } catch (error) {
+//     console.error("Server-error", error);
+//     res.status(500).send({
+//       status: "error",
+//       message: "Server-error",
+//       error: error.message,
+//     });
+//   }
+// });
 
-// update a character attack by id
-characterRoute.put("/weapon/:id/:aid", async (req, res) => {
-  try {
-    if (!req.params.aid) {
-      return res.status(400).send({
-        status: "error",
-        message: "Weapon ID is required",
-      });
-    }
+// // update a character attack by id
+// characterRoute.put("/weapon/:id/:aid", async (req, res) => {
+//   try {
+//     if (!req.params.aid) {
+//       return res.status(400).send({
+//         status: "error",
+//         message: "Weapon ID is required",
+//       });
+//     }
 
-    const weapon = await Character.findOneAndUpdate(
-      { _id: req.params.id, "attack._id": req.params.aid },
-      { $set: { "attack.$": req.body } },
-      { new: true }
-    );
-    if (!weapon) {
-      return res.status(404).send("Weapon not found");
-    }
-    res.status(200).send({
-      status: "ok",
-      message: "Weapon updated successfully",
-      data: weapon,
-    });
-  } catch (error) {
-    console.error("Server-error", error);
-    res.status(500).send({
-      status: "error",
-      message: "Server-error",
-      error: error.message,
-    });
-  }
-});
+//     const weapon = await Character.findOneAndUpdate(
+//       { _id: req.params.id, "attack._id": req.params.aid },
+//       { $set: { "attack.$": req.body } },
+//       { new: true }
+//     );
+//     if (!weapon) {
+//       return res.status(404).send("Weapon not found");
+//     }
+//     res.status(200).send({
+//       status: "ok",
+//       message: "Weapon updated successfully",
+//       data: weapon,
+//     });
+//   } catch (error) {
+//     console.error("Server-error", error);
+//     res.status(500).send({
+//       status: "error",
+//       message: "Server-error",
+//       error: error.message,
+//     });
+//   }
+// });
 
-// delete a character attack by id
-characterRoute.delete("/weapon/:id/:aid", async (req, res) => {
-  try {
-    if (!req.params.aid) {
-      return res.status(400).send({
-        status: "error",
-        message: "Weapon ID is required",
-      });
-    }
+// // delete a character attack by id
+// characterRoute.delete("/weapon/:id/:aid", async (req, res) => {
+//   try {
+//     if (!req.params.aid) {
+//       return res.status(400).send({
+//         status: "error",
+//         message: "Weapon ID is required",
+//       });
+//     }
 
-    const result = await Character.findByIdAndUpdate(
-      req.params.id,
-      { $pull: { attack: { _id: req.params.aid } } },
-      { new: true }
-    );
+//     const result = await Character.findByIdAndUpdate(
+//       req.params.id,
+//       { $pull: { attack: { _id: req.params.aid } } },
+//       { new: true }
+//     );
 
-    if (!result) {
-      return res.status(404).send({
-        status: "error",
-        message: "Character not found",
-      });
-    }
+//     if (!result) {
+//       return res.status(404).send({
+//         status: "error",
+//         message: "Character not found",
+//       });
+//     }
 
-    // const weapon = await Character.findOneAndDelete({
-    //   _id: req.params.id,
-    //   "attack._id": req.params.aid,
-    // });
+//     // const weapon = await Character.findOneAndDelete({
+//     //   _id: req.params.id,
+//     //   "attack._id": req.params.aid,
+//     // });
 
-    res.status(200).send({
-      status: "ok",
-      message: result,
-    });
-  } catch (error) {
-    console.error("Server-error", error);
-    res.status(500).send({
-      status: "error",
-      message: "Server-error",
-      error: error.message,
-    });
-  }
-});
+//     res.status(200).send({
+//       status: "ok",
+//       message: result,
+//     });
+//   } catch (error) {
+//     console.error("Server-error", error);
+//     res.status(500).send({
+//       status: "error",
+//       message: "Server-error",
+//       error: error.message,
+//     });
+//   }
+// });
 
 export default characterRoute;

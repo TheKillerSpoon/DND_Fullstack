@@ -33,16 +33,12 @@ backgroundRoute.get("/backgrounds", async (req, res) => {
 backgroundRoute.post("/background", adminAuth, async (req, res) => {
   try {
     let body = req.body;
-    const requiredFields = ["name"];
 
-    // Check if all required fields are present
-    for (const field of requiredFields) {
-      if (!body[field]) {
-        return res.status(400).send({
-          status: "error",
-          message: `${field} is required`,
-        });
-      }
+    if (!body.name) {
+      return res.status(400).send({
+        status: "error",
+        message: `${field} is required`,
+      });
     }
 
     const newBackground = await Background.create(body);

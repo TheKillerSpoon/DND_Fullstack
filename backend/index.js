@@ -3,9 +3,10 @@ import cors from "cors";
 
 import { dbConnect } from "./dbConnect.js";
 
-await dbConnect(); // Opretter forbindelse til databasen
+await dbConnect(); // connecting to the database
 
 import characterRoute from "./routes/character.routes.js";
+import weaponRoute from "./routes/weapon.route.js";
 import classRoute from "./routes/class.routes.js";
 import raceRoute from "./routes/race.routes.js";
 import backgroundRoute from "./routes/background.routes.js";
@@ -22,6 +23,7 @@ expressServer.use(express.json());
 
 expressServer.use(
   characterRoute,
+  weaponRoute,
   classRoute,
   raceRoute,
   backgroundRoute,

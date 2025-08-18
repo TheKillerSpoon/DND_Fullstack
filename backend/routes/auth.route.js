@@ -14,19 +14,7 @@ authRoute.post("/auth/signin", async (req, res) => {
     );
     const user = await userModel.findOne({ email: req.body.email });
 
-    /* TEST UDEN MODEL - NÅR I HAR LAVET MODELLEN KAN DETTE SLETTES */
-    // const hashedPassword = await bcryptjs.hash("admin", 10); // lav en hash til testbrug
-    // const user = {
-    //   _id: "test-admin-id", // brug et test-id
-    //   email: "a@b.com",
-    //   hashedPassword,
-    //   name: "Test admin",
-    //   role: "admin",
-    // };
-
-    /* TEST SLUT */
-
-    // Hvis brugeren ikke findes, returnér en fejl
+    // if user not found, return error
     if (!user) {
       return res.status(401).send({
         status: "error",
@@ -35,12 +23,12 @@ authRoute.post("/auth/signin", async (req, res) => {
       });
     }
 
-    // Sammenlign den indtastede adgangskode med den hash'ede adgangskode fra databasen
+    // compare password with hashed password
     const validPass = await bcryptjs.compare(
       req.body.password,
       user.hashedPassword
     );
-
+    // if password is not valid, return error
     if (!validPass) {
       return res.status(401).send({
         status: "error",
@@ -49,13 +37,13 @@ authRoute.post("/auth/signin", async (req, res) => {
       });
     }
 
-    // Hent JWT-secret fra miljøvariabler – skal bruges til at signere tokenet
+    // get JWT secret and expiry from environment variables
     const jwtSecret = process.env.JWT_SECRET;
 
-    // Hent udløbstid for token (standard: 1 time, hvis ikke angivet)
+    // get JWT expiry time from environment variables or set default
     const jwtExpiry = process.env.JWT_EXPIRES_IN || "1h";
 
-    // Hvis secret mangler, log fejl og returnér serverfejl
+    // if JWT secret is not set, return error
     if (!jwtSecret) {
       console.error("Missing JWT_SECRET in environment variables");
       return res.status(500).send({
@@ -65,7 +53,7 @@ authRoute.post("/auth/signin", async (req, res) => {
       });
     }
 
-    // Opret JWT-token med relevante brugerdata (kun det nødvendige!)
+    // create JWT token with relevant user data (only what is necessary for the client)
     const token = jwt.sign(
       {
         _id: user._id,
@@ -73,11 +61,11 @@ authRoute.post("/auth/signin", async (req, res) => {
         name: user.name,
         role: user.role,
       },
-      jwtSecret, // signering med hemmelig nøgle
-      { expiresIn: jwtExpiry } // angiv hvor længe token er gyldig
+      jwtSecret, // signature secret
+      { expiresIn: jwtExpiry } // generate token with expiry
     );
 
-    // Hvis alt er OK, returnér succes og token
+    // if everything is OK, return success and token
     return res.status(200).send({
       status: "ok",
       message: `${user.role} signed in successfully`,

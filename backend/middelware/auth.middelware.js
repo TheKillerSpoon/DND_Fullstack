@@ -1,38 +1,35 @@
-// JWT står for JSON Web Token, og det bruges til at sende sikker og verificerbar information mellem to parter som et JSON-objekt.
-// Den bruges ofte i autentificering.
 import jwt from "jsonwebtoken";
 
-// Middleware-funktion til at håndtere autentificering via JWT (funktion der kører mellem request og response)
+//auth middleware to protect routes (user must be logged in)
 export const auth = (req, res, next) => {
-  // Tjekker om brug af JWT er slået til via miljøvariabel (USE_JWT)
-  // Hvis USE_JWT er sat til "false", bruges der ikke auth-header
+  // check if USE_JWT is set to "false" in environment variables7
+  // if USE_JWT is set to "false", authentication is disabled
+  const useAuthHeader = process.env.USE_JWT !== "false";
 
-  const useAuthHeader = process.env.USE_JWT !== "false"; // String-sammenligning (vær opmærksom på at det er en tekstværdi)
+  // If authentication is disabled, proceed to the next middleware/route
+  if (!useAuthHeader) return next();
 
-  // Hvis autentificering ikke er slået til, gå videre til næste middleware/route
-  if (!useAuthHeader) return next(); // Auth er deaktiveret
-
-  // Henter Authorization-header fra HTTP-forespørgslen (typisk: "Bearer <token>")
+  // Gets the Authorization header from the HTTP request (typically "Bearer <token>")
   const tokenHeader = req.headers["authorization"];
 
-  // Hvis der ikke findes en authorization-header, returnér fejl (401: Unauthorized)
+  // If there is no authorization header, return an error (401: Unauthorized)
   if (!tokenHeader) {
     return res
       .status(401)
       .json({ status: "error", message: "No access without token." });
   }
 
-  // Splitter headeren og tager selve token-delen (efter "Bearer ")
+  // Splits the header and takes the token part (after "Bearer ")
   const token = tokenHeader.split(" ")[1];
 
-  // Hvis token mangler i headeren (forkert format), returnér fejl
+  // If the token is missing in the header (incorrect format), return an error
   if (!token) {
     return res
       .status(401)
       .json({ status: "error", message: "Token format invalid." });
   }
 
-  // Sikrer at hemmelig JWT-nøgle er sat i miljøvariabler (nødvendig for at validere token)
+  // Ensures that the secret JWT key is set in environment variables (necessary for validating the token)
   if (!process.env.JWT_SECRET) {
     console.error("Missing JWT_SECRET in env");
     return res
@@ -41,17 +38,17 @@ export const auth = (req, res, next) => {
   }
 
   try {
-    // Validerer tokenet med jwt.verify og den hemmelige nøgle
-    // Hvis det er gyldigt, bliver token'et dekodet
+    // validates the token with jwt.verify and the secret key
+    // If it is valid, the token is decoded
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-    // Gemmer den dekodede brugerinformation på req-objektet, så den er tilgængelig i resten af requesten
+    // Stores the decoded user information on the req object, so it is available in the rest of the request
     req.user = decoded;
 
-    // Går videre til næste middleware eller route-handler
+    // Proceed to the next middleware or route handler
     return next();
   } catch (err) {
-    // Tokenet kunne ikke valideres – det er sandsynligvis udløbet eller ugyldigt
+    // The token could not be validated – it is likely expired or invalid
     console.error("Invalid token:", err);
     return res.status(401).json({
       status: "error",
@@ -60,37 +57,36 @@ export const auth = (req, res, next) => {
   }
 };
 
-// Middleware-funktion til at håndtere autentificering via JWT (funktion der kører mellem request og response)
+//auth middleware to protect routes (admin must be logged in)
 export const adminAuth = (req, res, next) => {
-  // Tjekker om brug af JWT er slået til via miljøvariabel (USE_JWT)
-  // Hvis USE_JWT er sat til "false", bruges der ikke auth-header
+  // check if USE_JWT is set to "false" in environment variables7
+  // if USE_JWT is set to "false", authentication is disabled
+  const useAuthHeader = process.env.USE_JWT !== "false";
 
-  const useAuthHeader = process.env.USE_JWT !== "false"; // String-sammenligning (vær opmærksom på at det er en tekstværdi)
+  // If authentication is disabled, proceed to the next middleware/route
+  if (!useAuthHeader) return next();
 
-  // Hvis autentificering ikke er slået til, gå videre til næste middleware/route
-  if (!useAuthHeader) return next(); // Auth er deaktiveret
-
-  // Henter Authorization-header fra HTTP-forespørgslen (typisk: "Bearer <token>")
+  // Gets the Authorization header from the HTTP request (typically "Bearer <token>")
   const tokenHeader = req.headers["authorization"];
 
-  // Hvis der ikke findes en authorization-header, returnér fejl (401: Unauthorized)
+  // If there is no authorization header, return an error (401: Unauthorized)
   if (!tokenHeader) {
     return res
       .status(401)
       .json({ status: "error", message: "No access without token." });
   }
 
-  // Splitter headeren og tager selve token-delen (efter "Bearer ")
+  // Splits the header and takes the token part (after "Bearer ")
   const token = tokenHeader.split(" ")[1];
 
-  // Hvis token mangler i headeren (forkert format), returnér fejl
+  // If the token is missing in the header (incorrect format), return an error
   if (!token) {
     return res
       .status(401)
       .json({ status: "error", message: "Token format invalid." });
   }
 
-  // Sikrer at hemmelig JWT-nøgle er sat i miljøvariabler (nødvendig for at validere token)
+  // Ensures that the secret JWT key is set in environment variables (necessary for validating the token)
   if (!process.env.JWT_SECRET) {
     console.error("Missing JWT_SECRET in env");
     return res
@@ -99,25 +95,25 @@ export const adminAuth = (req, res, next) => {
   }
 
   try {
-    // Validerer tokenet med jwt.verify og den hemmelige nøgle
-    // Hvis det er gyldigt, bliver token'et dekodet
+    // validates the token with jwt.verify and the secret key
+    // If it is valid, the token is decoded
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
+    // Check if the decoded user has the admin role
     if (!decoded || decoded.role !== "admin") {
-      // Hvis tokenet ikke er gyldigt eller brugeren ikke er admin, returnér fejl
       return res.status(403).json({
         status: "error",
         message: "Access denied - admin role required.",
       });
     }
 
-    // Gemmer den dekodede brugerinformation på req-objektet, så den er tilgængelig i resten af requesten
+    // Stores the decoded user information on the req object, so it is available in the rest of the request
     req.user = decoded;
 
-    // Går videre til næste middleware eller route-handler
+    // Proceed to the next middleware or route handler
     return next();
   } catch (err) {
-    // Tokenet kunne ikke valideres – det er sandsynligvis udløbet eller ugyldigt
+    // The token could not be validated – it is likely expired or invalid
     console.error("Invalid token:", err);
     return res.status(401).json({
       status: "error",

@@ -10,20 +10,18 @@ import { useNavigate } from "react-router-dom";
 
 //? Hooks ------------------------------------------------------
 import { fetchCharacter } from "../../hooks/character/FetchCharacter.jsx";
+import { fetchWeapon } from "../../hooks/weapon/fetchWeapon.jsx";
 
 //? Character Page -----------------------------------------------
 function CharacterPage() {
-  const {
-    getCharacterById,
-    updateCharacter,
-    deleteWeapon,
-    updateWeapon,
-    character,
-  } = fetchCharacter();
+  const { getCharacterById, updateCharacter, character } = fetchCharacter();
+  const { getAllWeapons, deleteWeapon, updateWeapon, createWeapon, weapons } =
+    fetchWeapon();
   useEffect(() => {
     const CharacterID = localStorage.getItem("character");
     if (CharacterID) {
       getCharacterById(CharacterID);
+      getAllWeapons(CharacterID);
     } else {
       useNavigate().navigate("/select");
     }
@@ -45,15 +43,11 @@ function CharacterPage() {
     character && console.log(character);
   }, [character]);
 
-  const setCommonProperties = (weapon) => {
+  const setCommonProperties = () => {
     const commonProperties = {
       character: character,
       update: updateCharacter,
-      updateWeapon: updateWeapon,
-      deleteWeapon: deleteWeapon,
       // update: test,
-      // weaponUpdate: test1,
-      // weaponDelete: test,
     };
     return commonProperties;
   };
@@ -383,91 +377,130 @@ function CharacterPage() {
         </li>
         <li>
           <ul>
+            {/* kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk */}
             <li>Weapons:</li>
-            {character.attack.map((weapon, windex) => (
-              <li key={weapon?._id || windex}>
-                <ul>
-                  {weapon &&
-                    Object.keys(weapon).map((key, index) => {
-                      console.log("key:", [key], "index:", index);
-                      if (key && index > 1) {
-                        if (key !== "_id")
-                          return (
-                            <li key={key}>
-                              {key}: {weapon[key]}
-                              <Input
-                                id={key}
-                                type="number"
-                                character={character}
-                                updateCharacter={updateWeapon}
-                                blur="attack"
-                                weaponId={weapon._id}
-                                layer={windex}
-                              />
-                            </li>
-                          );
-                      } else if (index === 0) {
-                        var damage = weapon[key];
-                        return (
-                          <li key={key}>
-                            {key}:{" "}
-                            {Object.keys(damage)
-                              .map((key) => damage[key])
-                              .join("D")}
-                            {Object.keys(damage).map((key) => (
-                              <p key={key}>
-                                {key}
-                                <Input
-                                  id={key}
-                                  type="number"
-                                  character={character}
-                                  updateCharacter={updateWeapon}
-                                  blur="attackDamage"
-                                  weaponId={weapon._id}
-                                  layer={windex}
-                                  layer2="damage"
-                                />
-                              </p>
-                            ))}
-                          </li>
-                        );
-                      } else {
-                        return (
-                          <li key={key}>
-                            {key}: {weapon[key]}
-                            <button
-                              id={key}
-                              onClick={(e) =>
-                                weaponDelete(character._id, weapon._id, {
-                                  attack: character.attack.filter(
-                                    (x) => x._id !== weapon._id
-                                  ),
-                                })
-                              }
-                            >
-                              delete
-                            </button>
-                            <Input
-                              id={key}
-                              character={character}
-                              updateCharacter={updateWeapon}
-                              blur="attack"
-                              weaponId={weapon._id}
-                              layer={windex}
-                            />
-                          </li>
-                        );
-                      }
-                    })}
-                </ul>
+            {weapons.map((weapon) => (
+              <li key={weapon._id}>
+                <input
+                  type="text"
+                  placeholder="weapon name"
+                  defaultValue={weapon.name}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") e.target.blur();
+                  }}
+                  onBlur={(e) => {
+                    if (
+                      weapon.name !== e.target.value &&
+                      weapon._id &&
+                      e.target.value
+                    ) {
+                      updateWeapon(weapon._id, { name: e.target.value });
+                    }
+                  }}
+                />
+                <input
+                  type="number"
+                  placeholder="attack bonus"
+                  defaultValue={weapon.bonus}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") e.target.blur();
+                  }}
+                  onBlur={(e) => {
+                    if (
+                      weapon.bonus !== e.target.value &&
+                      weapon._id &&
+                      e.target.value
+                    ) {
+                      updateWeapon(weapon._id, { bonus: e.target.value });
+                    }
+                  }}
+                />
+
+                <input
+                  type="number"
+                  placeholder="dice amount"
+                  defaultValue={weapon.damage.hits}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") e.target.blur();
+                  }}
+                  onBlur={(e) => {
+                    if (
+                      weapon.damage.hits !== e.target.value &&
+                      weapon._id &&
+                      e.target.value
+                    ) {
+                      updateWeapon(weapon._id, {
+                        damage: {
+                          hitDice: weapon.damage.hitDice,
+                          hits: e.target.value,
+                        },
+                      });
+                    }
+                  }}
+                />
+                <input
+                  type="number"
+                  placeholder="hit dice"
+                  defaultValue={weapon.damage.hitDice}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") e.target.blur();
+                  }}
+                  onBlur={(e) => {
+                    if (
+                      weapon.damage.hitDice !== e.target.value &&
+                      weapon._id &&
+                      e.target.value
+                    ) {
+                      updateWeapon(weapon._id, {
+                        damage: { ...weapon.damage, hitDice: e.target.value },
+                      });
+                    }
+                  }}
+                />
+
+                <input
+                  type="number"
+                  placeholder="damage bonus"
+                  defaultValue={weapon.extra}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") e.target.blur();
+                  }}
+                  onBlur={(e) => {
+                    if (
+                      weapon.extra !== e.target.value &&
+                      weapon._id &&
+                      e.target.value
+                    ) {
+                      updateWeapon(weapon._id, {
+                        extra: e.target.value,
+                      });
+                    }
+                  }}
+                />
+
+                <button
+                  onClick={() => {
+                    deleteWeapon(weapon._id, character._id);
+                  }}
+                >
+                  delete
+                </button>
               </li>
             ))}
+
             <li>
-              <Input
-                id="attackName"
-                character={character}
-                updateCharacter={updateCharacter}
-                blur="weapon"
+              <input
+                type="text"
+                id="name"
+                placeholder="Enter weapon name"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") e.target.blur();
+                }}
+                onBlur={(e) => {
+                  if (e.target.value) {
+                    createWeapon({ name: e.target.value }, character._id);
+                  }
+                }}
               />
             </li>
           </ul>

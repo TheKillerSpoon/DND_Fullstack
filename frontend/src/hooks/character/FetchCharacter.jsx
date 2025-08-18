@@ -139,67 +139,67 @@ export const fetchCharacter = () => {
 
   //! Weapons ---------------------------------------------
 
-  // Create weapon
-  const createWeapon = async (id, weaponData) => {
-    setIsLoading(true);
-    try {
-      const response = await fetch(`${API_URL}/weapon/${id}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(weaponData),
-      });
-      if (!response.ok) {
-        throw new Error("Failed to create weapon");
-      }
-      getCharacterById(id); // Refresh the character data after updating
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // // Create weapon
+  // const createWeapon = async (id, weaponData) => {
+  //   setIsLoading(true);
+  //   try {
+  //     const response = await fetch(`${API_URL}/weapon/${id}`, {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(weaponData),
+  //     });
+  //     if (!response.ok) {
+  //       throw new Error("Failed to create weapon");
+  //     }
+  //     getCharacterById(id); // Refresh the character data after updating
+  //   } catch (error) {
+  //     setError(error.message);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
-  // Update weapon
-  const updateWeapon = async (id, weaponId, weaponData) => {
-    setIsLoading(true);
-    try {
-      const response = await fetch(`${API_URL}/weapon/${id}/${weaponId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(weaponData),
-      });
-      if (!response.ok) {
-        throw new Error("Failed to update weapon");
-      }
-      getCharacterById(id); // Refresh the character data after updating
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // // Update weapon
+  // const updateWeapon = async (id, weaponId, weaponData) => {
+  //   setIsLoading(true);
+  //   try {
+  //     const response = await fetch(`${API_URL}/weapon/${id}/${weaponId}`, {
+  //       method: "PUT",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify(weaponData),
+  //     });
+  //     if (!response.ok) {
+  //       throw new Error("Failed to update weapon");
+  //     }
+  //     getCharacterById(id); // Refresh the character data after updating
+  //   } catch (error) {
+  //     setError(error.message);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
-  // Delete weapon
-  const deleteWeapon = async (id, weaponId) => {
-    setIsLoading(true);
-    try {
-      const response = await fetch(`${API_URL}/weapon/${id}/${weaponId}`, {
-        method: "DELETE",
-      });
-      if (!response.ok) {
-        throw new Error("Failed to delete weapon");
-      }
-      getCharacterById(id); // Refresh the character data after updating
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // // Delete weapon
+  // const deleteWeapon = async (id, weaponId) => {
+  //   setIsLoading(true);
+  //   try {
+  //     const response = await fetch(`${API_URL}/weapon/${id}/${weaponId}`, {
+  //       method: "DELETE",
+  //     });
+  //     if (!response.ok) {
+  //       throw new Error("Failed to delete weapon");
+  //     }
+  //     getCharacterById(id); // Refresh the character data after updating
+  //   } catch (error) {
+  //     setError(error.message);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   return {
     //* misc
@@ -215,8 +215,8 @@ export const fetchCharacter = () => {
     updateCharacter,
     deleteCharacter,
     //* Weapons
-    createWeapon,
-    updateWeapon,
-    deleteWeapon,
+    // createWeapon,
+    // updateWeapon,
+    // deleteWeapon,
   };
 };
