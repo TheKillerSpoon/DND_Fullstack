@@ -33,7 +33,8 @@ const validateCharacter = async (body, userID) => {
     if (!v.comparison) return true; // If no comparison value, skip validation
 
     return v.data.some(
-      (x) => x.name.toLowerCase() === v.comparison.toLowerCase()
+      (x) =>
+        x.name.toLowerCase().trim(" ") === v.comparison.toLowerCase().trim(" ")
     );
   });
 
